@@ -64,14 +64,14 @@ button,input,select{font:inherit}
 <body>
 <div class="app">
  <div class="top">
-   <div class="brand"><div><h1>QV Finanzas · Schedule familiar</h1><small>Oct 2026 → Abr 2027 · seguimiento de trabajo, cheques y colchón</small></div><div class="pill">AUTO-GUARDADO</div></div>
+   <div class="brand"><div><h1>QV Finanzas · Schedule familiar</h1><small>Oct 2026 → Abr 2027 · seguimiento de trabajo, cheques y colchón</small></div><div class="pill">GUARDADO LOCAL</div></div>
    <div class="monthNav"><button onclick="moveMonth(-1)">‹</button><div class="monthTitle" id="monthTitle"></div><button onclick="moveMonth(1)">›</button></div>
  </div>
 
  <div class="notice" id="milestone"></div>
 
  <div class="kpis">
-   <div class="kpi"><div class="l">Ingreso proyectado</div><div class="v" id="kProjected">$0</div><div class="s">Cheques + otros ingresos</div></div>
+   <div class="kpi"><div class="l">Ingreso proyectado / real</div><div class="v" id="kProjected">$0</div><div class="s">Usa monto real al marcar recibido</div></div>
    <div class="kpi"><div class="l">Meta de gastos</div><div class="v" id="kBudget">$0</div><div class="s">Editable por mes</div></div>
    <div class="kpi"><div class="l">Margen proyectado</div><div class="v" id="kMargin">$0</div><div class="s">Antes de gastos no previstos</div></div>
    <div class="kpi"><div class="l">Colchón acumulado</div><div class="v" id="kCushion">$0</div><div class="s">Desde octubre + colchón inicial</div></div>
@@ -106,7 +106,7 @@ button,input,select{font:inherit}
    <div><b>Diciembre Carey:</b> último día trabajado 17 dic; regreso 4 ene. Presupuestadas 64 h PTO: 32 h del 21–24 dic + holiday 25 dic y 32 h del 28–31 dic + holiday 1 ene.</div>
    <div><b>Vacaciones Vero:</b> 10–20 nov. El calendario marca PTO en sus días programados; el cálculo no usa PTO para crear overtime. Puedes cambiar cualquier día con los botones de extra/missed.</div>
    <div><b>Presupuesto:</b> octubre inicia en $7,140.39; noviembre–abril en $6,504.27 suponiendo que el movimiento del 401(k) ya liberó $636.12/mes. Todos los importes son editables.</div>
-   <div><b>Importante:</b> el estimado Baylor es conservador porque no suma los diferenciales nocturnos/fin de semana no incluidos en la calculadora base.</div>
+   <div><b>Importante:</b> el estimado Baylor es conservador porque no suma los diferenciales nocturnos/fin de semana no incluidos en la calculadora base.</div><div><b>Guardado actual:</b> los checks y valores se guardan en <code>localStorage</code> de este navegador. El HTML está en GitHub, pero el estado todavía no se sincroniza con GitHub ni con QV Home Intelligence.</div>
    <div class="actions"><button onclick="exportData()">Exportar respaldo JSON</button><button onclick="importData()">Importar respaldo</button><button onclick="resetAll()">Restablecer</button></div>
  </div>
 </div>
@@ -277,7 +277,12 @@ function saveMonthInputs(){
 
 function projectedIncomeForMonth(y,m){
  const ms=getMonthState(y,m);
- const p=monthEvents(y,m).reduce((s,e)=>s+e.projected,0);
+ const p=monthEvents(y,m).reduce((s,e)=>{
+   const ps=state.pay[e.id]||{};
+   const actual=parseFloat(ps.actual);
+   const amount=(ps.received && Number.isFinite(actual)) ? actual : e.projected;
+   return s+amount;
+ },0);
  return p+ms.other+ms.ma;
 }
 function cumulativeThrough(y,m){
@@ -354,7 +359,25 @@ function renderCalendar(y,m){
        if(e.extra)extraCounter++;
      });
      pe.forEach(p=>{
-       body+=`<div class="event pay"><div class="row"><span class="name">💰 Pago ${p.label}</span></div><div class="meta">Proy. ${money(p.projected)}${p.close?' · cierre '+p.close.getDate()+'/'+(p.close.getMonth()+1):''}</div></div>`;
+       state.pay[p.id]=state.pay[p.id]||{received:false,actual:'',met:false};
+       const ps=state.pay[p.id];
+       const actualNum=parseFloat(ps.actual);
+       const diff=Number.isFinite(actualNum)?actualNum-p.projected:null;
+       body+=`<div class="event pay">
+         <div class="row"><span class="name">💰 Pago ${p.label}</span></div>
+         <div class="meta">Proy. ${money(p.projected)}${p.close?' · cierre '+p.close.getDate()+'/'+(p.close.getMonth()+1):''}</div>
+         <div class="extraBtns" style="margin-top:7px;">
+           <label class="mini" style="display:flex;align-items:center;justify-content:center;gap:5px;">
+             <input type="checkbox" ${ps.received?'checked':''} onchange="setPay('${p.id}','received',this.checked);render()"> Recibido
+           </label>
+           <input aria-label="Cheque real" type="number" step="0.01" value="${ps.actual}" placeholder="Cheque real"
+             oninput="setPay('${p.id}','actual',this.value);renderSummary();refreshPayDiff('${p.id}',${p.projected})"
+             style="min-width:0;width:100%;border:1px solid var(--line);background:#060b13;color:var(--text);border-radius:8px;padding:5px 6px;font-size:9px;">
+         </div>
+         <div class="meta" id="diff_${p.id.replace(/[^a-zA-Z0-9]/g,'_')}" style="margin-top:5px;${diff===null?'display:none;':''}">
+           ${diff===null?'':('Diferencia: '+money(diff))}
+         </div>
+       </div>`;
      });
      if(d.getMonth()===m){
        body+=`<div class="extraBtns"><button class="mini" onclick="addExtra('${s}','carey')">+ J extra</button><button class="mini" onclick="addExtra('${s}','baylor')">+ V extra</button></div>`;
@@ -381,7 +404,23 @@ function renderPayRows(y,m){
    wrap.appendChild(div);
  });
 }
-function setPay(id,key,val){state.pay[id]=state.pay[id]||{};state.pay[id][key]=val;save()}
+function setPay(id,key,val){
+ state.pay[id]=state.pay[id]||{};
+ state.pay[id][key]=val;
+ save();
+ renderSummary();
+}
+function refreshPayDiff(id,projected){
+ const ps=state.pay[id]||{};
+ const actual=parseFloat(ps.actual);
+ const el=document.getElementById('diff_'+id.replace(/[^a-zA-Z0-9]/g,'_'));
+ if(!el)return;
+ if(!Number.isFinite(actual)){el.style.display='none';el.textContent='';return;}
+ const diff=actual-projected;
+ el.style.display='block';
+ el.textContent='Diferencia: '+money(diff);
+ el.style.color=diff>=0?'var(--green)':'var(--red)';
+}
 
 function moveMonth(n){cursor=new Date(cursor.getFullYear(),cursor.getMonth()+n,1);render()}
 function exportData(){
