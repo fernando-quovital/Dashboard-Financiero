@@ -2,1818 +2,399 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Dashboard Financiero</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>QV Finanzas — Schedule Oct 2026 · Abr 2027</title>
 <style>
 :root{
-  --bg:#0b0d10;
-  --surface:#12151a;
-  --surface2:#1a1e25;
-  --border:#242832;
-  --text:#e8eaed;
-  --text-muted:#8a9099;
-  --accent:#22c55e;
-  --accent-dim:rgba(34,197,94,0.12);
-  --red:#ef4444;
-  --red-dim:rgba(239,68,68,0.12);
-  --amber:#f59e0b;
-  --amber-dim:rgba(245,158,11,0.12);
-  --blue:#3b82f6;
-  --purple:#a78bfa;
+  --bg:#050912; --panel:#0b111d; --panel2:#0f1726; --line:#1b2a42;
+  --text:#f4f7fb; --muted:#8f9bb0; --blue:#1685ff; --cyan:#45b8ff;
+  --green:#30d78a; --yellow:#ffca4b; --red:#ff5d67; --purple:#a889ff;
+  --orange:#ff9d2e; --shadow:0 18px 55px rgba(0,0,0,.34);
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Inter',sans-serif;
-  font-size:14px;
-  -webkit-tap-highlight-color:transparent;
-  padding-bottom:78px;
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#02050b 0%,var(--bg) 30%,#07101d 100%);color:var(--text);
+ font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}
+.app{max-width:1180px;margin:auto;padding:18px 14px 80px}
+.top{position:sticky;top:0;z-index:30;background:rgba(5,9,18,.94);backdrop-filter:blur(18px);
+ border-bottom:1px solid var(--line);margin:-18px -14px 18px;padding:14px 14px 12px}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand h1{font-size:19px;margin:0;letter-spacing:.01em}.brand small{color:var(--muted)}
+.monthNav{margin-top:12px;display:grid;grid-template-columns:48px 1fr 48px;gap:8px}
+.monthNav button,.ghost{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:14px;padding:11px;cursor:pointer}
+.monthTitle{text-align:center;border:1px solid var(--line);background:var(--panel2);padding:11px;border-radius:14px;font-weight:800}
+.notice{border:1px solid #29476f;background:linear-gradient(135deg,rgba(22,133,255,.12),rgba(69,184,255,.05));
+ border-radius:16px;padding:12px 14px;color:#cce6ff;font-size:13px;line-height:1.5;margin-bottom:14px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}
+.kpi .l{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em}.kpi .v{font-size:22px;font-weight:900;margin-top:4px}
+.kpi .s{font-size:11px;color:var(--muted);margin-top:3px}.pos{color:var(--green)!important}.neg{color:var(--red)!important}.warn{color:var(--yellow)!important}
+.controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.control{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px}
+.control label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}.control input{width:100%;background:#060b13;border:1px solid var(--line);color:var(--text);border-radius:10px;padding:9px}
+.legend{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0 14px}.pill{font-size:11px;border:1px solid var(--line);border-radius:999px;padding:5px 8px;color:var(--muted);background:var(--panel)}
+.p-work{color:#cfe7ff;border-color:#245897}.p-vac{color:#dacdff;border-color:#59449b}.p-hol{color:#ffe9a9;border-color:#7b6320}.p-pay{color:#bdf5d8;border-color:#206749}.p-close{color:#ffbdc2;border-color:#70323a}
+.weekdays,.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}.weekdays{margin-bottom:6px}
+.weekdays div{text-align:center;color:var(--muted);font-size:10px;text-transform:uppercase;font-weight:800}
+.calendar{display:flex;flex-direction:column;gap:7px}.day{min-height:135px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px;overflow:hidden}
+.day.out{opacity:.23}.day.today{outline:2px solid var(--blue)}.day.payday{border-color:#245f49;background:linear-gradient(180deg,rgba(48,215,138,.07),var(--panel))}
+.dhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.date{font-weight:900;font-size:13px}.dow{font-size:9px;color:var(--muted)}
+.event{border:1px solid var(--line);border-radius:10px;padding:6px;margin-top:5px;background:#080e18;font-size:10px}
+.event .row{display:flex;align-items:center;gap:5px}.event input[type=checkbox]{accent-color:var(--green);width:14px;height:14px}
+.name{font-weight:800;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.meta{font-size:9px;color:var(--muted);margin-top:3px;line-height:1.25}
+.work{border-left:3px solid var(--blue)}.vac{border-left:3px solid var(--purple)}.hol{border-left:3px solid var(--yellow)}.personal{border-left:3px solid var(--orange)}.closed{border-left:3px solid var(--red)}
+.pay{border-left:3px solid var(--green);background:rgba(48,215,138,.04)}
+.extraBtns{display:flex;gap:4px;margin-top:6px}.mini{flex:1;border:1px dashed var(--line);background:transparent;color:var(--muted);border-radius:8px;padding:5px 3px;font-size:9px;cursor:pointer}
+.payPanel{margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px}
+.payPanel h2,.assumptions h2{font-size:15px;margin:0 0 10px}.payrow{display:grid;grid-template-columns:1.2fr .8fr .8fr .9fr;gap:8px;align-items:center;border-top:1px solid var(--line);padding:10px 0;font-size:12px}
+.payrow:first-of-type{border-top:0}.payrow .proj{font-weight:900}.payrow input[type=number]{width:100%;background:#060b13;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:8px}
+.checkline{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:10px}.checkline input{accent-color:var(--green)}
+.risk{margin-top:12px;border-radius:14px;padding:11px 12px;font-size:12px;font-weight:800}
+.risk.ok{background:rgba(48,215,138,.09);border:1px solid #1b6547;color:#a9f1cf}.risk.bad{background:rgba(255,93,103,.09);border:1px solid #70323a;color:#ffc2c6}
+.assumptions{margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;font-size:12px;color:var(--muted);line-height:1.55}
+.assumptions b{color:var(--text)}
+.actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.actions button{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:9px 11px;border-radius:11px;cursor:pointer;font-size:11px}
+@media(max-width:780px){
+ .kpis{grid-template-columns:repeat(2,1fr)} .controls{grid-template-columns:repeat(2,1fr)}
+ .weekdays{display:none}.week{grid-template-columns:1fr}.day{min-height:0}.day.out{display:none}
+ .payrow{grid-template-columns:1fr 1fr}.payrow>div:nth-child(1){grid-column:1/-1}
 }
-header.top{
-  position:sticky;top:0;z-index:20;
-  background:var(--surface);
-  border-bottom:1px solid var(--border);
-  padding:16px 16px 12px;
-}
-header.top h1{font-size:17px;font-weight:800;}
-header.top .sub{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:12px;color:var(--text-muted);}
-.month-pill{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-family:'JetBrains Mono',monospace;}
-
-main{padding:14px 14px 24px;max-width:640px;margin:0 auto;}
-
-.card{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:16px;
-  margin-bottom:12px;
-}
-.card h2{font-size:14.5px;font-weight:700;margin-bottom:12px;}
-
-.placeholder{
-  text-align:center;
-  padding:40px 16px;
-  color:var(--text-muted);
-  font-size:13px;
-}
-.placeholder .ic{font-size:32px;margin-bottom:10px;opacity:0.6;}
-.placeholder .todo{
-  margin-top:10px;
-  display:inline-block;
-  background:var(--amber-dim);
-  color:var(--amber);
-  border:1px solid var(--amber);
-  border-radius:8px;
-  padding:4px 10px;
-  font-size:11px;
-}
-
-nav.tabs{
-  position:fixed;bottom:0;left:0;right:0;
-  background:var(--surface);
-  border-top:1px solid var(--border);
-  display:flex;
-  z-index:30;
-  padding-bottom:env(safe-area-inset-bottom);
-  overflow-x:auto;
-}
-nav.tabs button{
-  flex:1;min-width:0;
-  background:none;border:none;
-  color:var(--text-muted);
-  font-size:10px;
-  padding:9px 2px 8px;
-  display:flex;flex-direction:column;align-items:center;gap:3px;
-  cursor:pointer;
-  font-family:'Inter',sans-serif;
-  white-space:nowrap;
-}
-nav.tabs button .ic{font-size:17px;}
-nav.tabs button.active{color:var(--accent);}
-
-.tab-content{display:none;}
-.tab-content.active{display:block;}
-
-/* ---- Deudas ---- */
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:2px;}
-.stat-box{background:var(--surface2);border-radius:10px;padding:10px 12px;}
-.stat-box .label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:4px;}
-.stat-box .value{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;}
-.stat-box .value.accent{color:var(--accent);}
-
-.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--text-muted);margin-bottom:10px;}
-.legend .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;}
-
-.debt-row{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border);}
-.debt-row:last-child{border-bottom:none;}
-.debt-badge{width:8px;height:34px;border-radius:4px;flex-shrink:0;}
-.debt-badge.tarjeta{background:var(--blue);}
-.debt-badge.prestamo{background:var(--purple);}
-.debt-badge.carro{background:var(--amber);}
-.debt-row .info{flex:1;min-width:0;}
-.debt-row .name{font-size:13.5px;font-weight:600;}
-.debt-row .meta{font-size:11px;color:var(--text-muted);margin-top:2px;line-height:1.4;}
-.debt-row .amt{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;text-align:right;white-space:nowrap;}
-.debt-row .actions{display:flex;gap:2px;margin-top:4px;justify-content:flex-end;}
-.icon-btn{background:none;border:none;color:var(--text-muted);font-size:14px;cursor:pointer;padding:3px 5px;}
-.icon-btn:hover{color:var(--accent);}
-
-.edit-block{padding:12px 0;border-bottom:1px solid var(--border);}
-.edit-block label{display:block;font-size:10.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.3px;margin:8px 0 4px;}
-.edit-block input,.edit-block select{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;padding:9px 10px;font-family:'JetBrains Mono',monospace;}
-.edit-block .btn-row{display:flex;gap:8px;margin-top:12px;}
-.btn{flex:1;background:var(--accent);color:#0f1117;border:none;border-radius:9px;padding:11px;font-weight:700;font-size:13.5px;cursor:pointer;}
-.btn.secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
-.btn.danger{background:var(--red-dim);color:var(--red);border:1px solid var(--red);}
-.btn.full{width:100%;}
-
-/* ---- Pagos semana ---- */
-.mesnav{display:flex;align-items:center;justify-content:space-between;gap:8px;}
-.mesnav .lbl{font-weight:700;font-size:14px;}
-.mesnav button{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:9px;padding:8px 12px;font-size:12.5px;cursor:pointer;}
-.mesnav button:disabled{opacity:0.35;cursor:default;}
-
-.box-row{display:flex;gap:10px;}
-.box-row .card{flex:1;margin-bottom:0;padding:12px 14px;}
-.box-row .label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:4px;}
-.box-row .val{font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;}
-.box-row .val.live{color:var(--accent);}
-.box-row input.manual{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:16px;padding:8px 10px;font-family:'JetBrains Mono',monospace;margin-top:2px;}
-
-.sem-head{font-weight:700;font-size:13px;margin-bottom:8px;display:flex;justify-content:space-between;color:var(--text-muted);}
-.sem-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
-.sem-item:last-child{border-bottom:none;}
-.sem-item.checked{opacity:0.45;}
-.sem-check{width:21px;height:21px;border-radius:6px;border:2px solid var(--border);background:var(--surface2);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;color:var(--accent);margin-top:1px;}
-.sem-check.on{background:var(--accent-dim);border-color:var(--accent);}
-.sem-item .info{flex:1;min-width:0;}
-.sem-item .nom{font-size:13px;font-weight:600;}
-.sem-item.checked .nom{text-decoration:line-through;}
-.sem-item .meta{font-size:10.5px;color:var(--text-muted);margin-top:1px;}
-.sem-item .monto{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;white-space:nowrap;}
-.sem-item .monto.in{color:var(--accent);}
-.sem-item .pagarcompleta{display:block;margin-top:4px;background:none;border:none;color:var(--blue);font-size:10.5px;cursor:pointer;text-decoration:underline;padding:0;}
-.sem-item.pausado{opacity:0.4;font-style:italic;}
-
-.sem-resumen{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:8px;padding-bottom:8px;border-bottom:1px dashed var(--border);}
-.sem-resumen b{color:var(--text);font-family:'JetBrains Mono',monospace;}
-.alerta-semana{border-radius:10px;padding:9px 11px;margin-top:8px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;}
-.alerta-semana.bad{background:var(--red-dim);color:var(--red);border:1px solid var(--red);}
-.alerta-semana.ok{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent);}
-
-/* ---- Cheques ---- */
-.colchon-banner{border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid;}
-.colchon-banner.pos{background:var(--accent-dim);border-color:var(--accent);}
-.colchon-banner.neg{background:var(--red-dim);border-color:var(--red);}
-.colchon-banner .tag{font-size:10.5px;text-transform:uppercase;letter-spacing:0.6px;font-weight:700;}
-.colchon-banner.pos .tag{color:var(--accent);}
-.colchon-banner.neg .tag{color:var(--red);}
-.colchon-banner .amt{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;margin-top:4px;}
-.colchon-banner .detail{font-size:11.5px;color:var(--text-muted);margin-top:6px;line-height:1.5;}
-
-.cheque-card{margin-bottom:12px;}
-.cheque-card .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.cheque-card .head .fuente{font-weight:700;font-size:14px;}
-.cheque-card .head .fecha{font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;}
-.cheque-card .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
-.cheque-card .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;}
-.cheque-card label{display:block;font-size:9.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:3px;}
-.cheque-card input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:13px;padding:7px 8px;font-family:'JetBrains Mono',monospace;}
-.cheque-card .estimado-box{background:var(--surface2);border-radius:9px;padding:8px 10px;font-size:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
-.cheque-card .estimado-box .num{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--blue);}
-.cheque-card .diff-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-top:4px;}
-.cheque-card .diff-row .v{font-family:'JetBrains Mono',monospace;font-weight:700;}
-.cubierto-row{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:11.5px;color:var(--text-muted);}
-.cubierto-chk{width:18px;height:18px;border-radius:5px;border:2px solid var(--border);background:var(--surface2);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;color:var(--accent);}
-.cubierto-chk.on{background:var(--accent-dim);border-color:var(--accent);}
-.historico-tag{font-size:10px;background:var(--surface2);color:var(--text-muted);border-radius:6px;padding:2px 7px;}
-
-/* ---- Proyección ---- */
-.retiro-banner,.emilio-banner{border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid var(--blue);background:rgba(59,130,246,0.1);}
-.emilio-banner{border-color:var(--purple);background:rgba(167,139,250,0.1);}
-.retiro-banner .tag{font-size:10.5px;text-transform:uppercase;letter-spacing:0.6px;font-weight:700;color:var(--blue);}
-.emilio-banner .tag{color:var(--purple);}
-.retiro-banner .name,.emilio-banner .name{font-size:16px;font-weight:700;margin-top:4px;}
-.retiro-banner .detail,.emilio-banner .detail{font-size:11.5px;color:var(--text-muted);margin-top:6px;line-height:1.6;}
-.mes-extra-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);}
-.mes-extra-row:last-child{border-bottom:none;}
-.mes-extra-row .lbl{font-size:12.5px;font-weight:600;}
-.mes-extra-row input{width:100px;background:var(--bg);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:13px;padding:6px 8px;font-family:'JetBrains Mono',monospace;text-align:right;}
-.liberacion-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12.5px;}
-.liberacion-row:last-child{border-bottom:none;}
-.liberacion-row .m{font-family:'JetBrains Mono',monospace;color:var(--text-muted);width:56px;flex-shrink:0;}
-.liberacion-row .n{flex:1;}
-.liberacion-row .tag-retiro{color:var(--blue);font-size:10.5px;}
-.liberacion-row .tag-emilio{color:var(--purple);font-size:10.5px;}
-.liberacion-row .tag-done{color:var(--accent);font-size:10.5px;}
-
-/* ---- Crédito ---- */
-.util-banner{border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid;background:var(--surface2);}
-.util-banner .tag{font-size:10.5px;text-transform:uppercase;letter-spacing:0.6px;font-weight:700;}
-.util-banner .name{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;margin-top:4px;}
-.util-banner .detail{font-size:11.5px;color:var(--text-muted);margin-top:6px;line-height:1.5;}
-.score-box{text-align:center;padding:14px 0;}
-.score-box .num{font-family:'JetBrains Mono',monospace;font-size:40px;font-weight:700;}
-.score-box .sub{font-size:11px;color:var(--text-muted);margin-top:2px;}
-.score-box .comp{font-size:11.5px;color:var(--text-muted);margin-top:8px;}
-.card-credito{margin-bottom:10px;}
-.card-credito .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;}
-.card-credito .name{font-size:13.5px;font-weight:700;}
-.card-credito .util{font-family:'JetBrains Mono',monospace;font-weight:700;white-space:nowrap;}
-.card-credito .sinlimite{color:var(--text-muted);font-size:11.5px;white-space:nowrap;}
-.card-credito .grid3b{display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:12px;}
-.card-credito .grid3b .k{color:var(--text-muted);font-size:10px;text-transform:uppercase;margin-bottom:2px;}
-.card-credito .grid3b .v{font-family:'JetBrains Mono',monospace;font-weight:600;}
-
-/* ---- Historial ---- */
-.hist-month{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;}
-.hist-month .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.hist-month .head .lbl{font-size:14px;font-weight:700;}
-.hist-month .head .fecha{font-size:10.5px;color:var(--text-muted);}
-.hist-month .metrics{display:flex;gap:16px;margin-bottom:8px;font-size:11.5px;color:var(--text-muted);}
-.hist-month .metrics b{color:var(--text);font-family:'JetBrains Mono',monospace;}
-.hist-cheque-row{display:flex;justify-content:space-between;font-size:11.5px;padding:4px 0;border-top:1px dashed var(--border);}
-.hist-cheque-row:first-child{border-top:none;}
-.hist-actions{display:flex;gap:8px;margin-top:8px;}
 </style>
 </head>
 <body>
+<div class="app">
+ <div class="top">
+   <div class="brand"><div><h1>QV Finanzas · Schedule familiar</h1><small>Oct 2026 → Abr 2027 · seguimiento de trabajo, cheques y colchón</small></div><div class="pill">AUTO-GUARDADO</div></div>
+   <div class="monthNav"><button onclick="moveMonth(-1)">‹</button><div class="monthTitle" id="monthTitle"></div><button onclick="moveMonth(1)">›</button></div>
+ </div>
 
-<header class="top">
-  <h1>💰 Dashboard Financiero</h1>
-  <div class="sub">
-    <span class="month-pill" id="month-pill">Jul 2026</span>
-    <span>Jhoan · esqueleto en construcción</span>
-  </div>
-</header>
+ <div class="notice" id="milestone"></div>
 
-<main>
+ <div class="kpis">
+   <div class="kpi"><div class="l">Ingreso proyectado</div><div class="v" id="kProjected">$0</div><div class="s">Cheques + otros ingresos</div></div>
+   <div class="kpi"><div class="l">Meta de gastos</div><div class="v" id="kBudget">$0</div><div class="s">Editable por mes</div></div>
+   <div class="kpi"><div class="l">Margen proyectado</div><div class="v" id="kMargin">$0</div><div class="s">Antes de gastos no previstos</div></div>
+   <div class="kpi"><div class="l">Colchón acumulado</div><div class="v" id="kCushion">$0</div><div class="s">Desde octubre + colchón inicial</div></div>
+ </div>
 
-  <div id="tab-resumen" class="tab-content active">
-    <div id="resumen-container"></div>
-  </div>
+ <div class="controls">
+   <div class="control"><label>Meta de gastos del mes</label><input id="budgetInput" type="number" step="0.01" oninput="saveMonthInputs()"></div>
+   <div class="control"><label>Otros ingresos del mes</label><input id="otherIncome" type="number" step="0.01" oninput="saveMonthInputs()"></div>
+   <div class="control"><label>Colchón inicial (solo octubre)</label><input id="initialCushion" type="number" step="0.01" oninput="saveMonthInputs()"></div>
+   <div class="control"><label>MA part-time / extra</label><input id="maIncome" type="number" step="0.01" oninput="saveMonthInputs()"></div>
+ </div>
 
-  <div id="tab-deudas" class="tab-content">
-    <div id="deudas-container"></div>
-  </div>
+ <div class="legend">
+   <span class="pill p-work">Trabajo</span><span class="pill p-vac">Vacaciones/PTO</span><span class="pill p-hol">Holiday/Personal</span>
+   <span class="pill p-pay">Día de pago</span><span class="pill p-close">Cierre</span>
+ </div>
 
-  <div id="tab-cheques" class="tab-content">
-    <div id="cheques-container"></div>
-  </div>
+ <div class="weekdays"><div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div><div>Dom</div></div>
+ <div class="calendar" id="calendar"></div>
 
-  <div id="tab-pagossem" class="tab-content">
-    <div id="pagossem-container"></div>
-  </div>
+ <div class="payPanel">
+   <h2>Cheques del mes</h2>
+   <div id="payRows"></div>
+   <div id="riskBox" class="risk"></div>
+ </div>
 
-  <div id="tab-proyeccion" class="tab-content">
-    <div id="proyeccion-container"></div>
-  </div>
-
-  <div id="tab-credito" class="tab-content">
-    <div id="credito-container"></div>
-  </div>
-
-  <div id="tab-historial" class="tab-content">
-    <div id="historial-container"></div>
-  </div>
-
-</main>
-
-<nav class="tabs">
-  <button data-tab="resumen" class="active" onclick="switchTab('resumen')"><span class="ic">📊</span>Resumen</button>
-  <button data-tab="deudas" onclick="switchTab('deudas')"><span class="ic">💳</span>Deudas</button>
-  <button data-tab="cheques" onclick="switchTab('cheques')"><span class="ic">🧾</span>Cheques</button>
-  <button data-tab="pagossem" onclick="switchTab('pagossem')"><span class="ic">🗓️</span>Pagos sem.</button>
-  <button data-tab="proyeccion" onclick="switchTab('proyeccion')"><span class="ic">📈</span>Proyección</button>
-  <button data-tab="credito" onclick="switchTab('credito')"><span class="ic">📶</span>Crédito</button>
-  <button data-tab="historial" onclick="switchTab('historial')"><span class="ic">📜</span>Historial</button>
-</nav>
+ <div class="assumptions">
+   <h2>Supuestos activos</h2>
+   <div><b>Jhoan · Carey:</b> lunes–viernes, 5:30 a. m.–4:00 p. m., 10.5 h/día. $23 regular, $34.50 OT, deducción 27.27%. Cierre quincenal viernes; pago 7 días después.</div>
+   <div><b>Vero · Baylor:</b> martes, miércoles, sábado y domingo, 12 h/día. $18.12 regular, $27.69 OT, deducción 24.43%. Cierre quincenal domingo; pago el viernes siguiente.</div>
+   <div><b>Thanksgiving Carey:</b> cierre después del 20 nov; regreso 30 nov. Presupuestados 8 h Thanksgiving + 8 h Black Friday + 8 h Personal/Birthday.</div>
+   <div><b>Diciembre Carey:</b> último día trabajado 17 dic; regreso 4 ene. Presupuestadas 64 h PTO: 32 h del 21–24 dic + holiday 25 dic y 32 h del 28–31 dic + holiday 1 ene.</div>
+   <div><b>Vacaciones Vero:</b> 10–20 nov. El calendario marca PTO en sus días programados; el cálculo no usa PTO para crear overtime. Puedes cambiar cualquier día con los botones de extra/missed.</div>
+   <div><b>Presupuesto:</b> octubre inicia en $7,140.39; noviembre–abril en $6,504.27 suponiendo que el movimiento del 401(k) ya liberó $636.12/mes. Todos los importes son editables.</div>
+   <div><b>Importante:</b> el estimado Baylor es conservador porque no suma los diferenciales nocturnos/fin de semana no incluidos en la calculadora base.</div>
+   <div class="actions"><button onclick="exportData()">Exportar respaldo JSON</button><button onclick="importData()">Importar respaldo</button><button onclick="resetAll()">Restablecer</button></div>
+ </div>
+</div>
 
 <script>
-/* ---------------- Cookie storage (chunked) — mismo mecanismo probado en snowball-dashboard.html ---------------- */
-function setCookie(name, value, days) {
-  const d = new Date(Date.now() + (days || 365) * 864e5).toUTCString();
-  document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + d + '; path=/; SameSite=Lax';
+const MONTHS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const STORE='qv_schedule_finanzas_v2';
+const START=new Date(2026,8,1); // hidden calculation buffer
+const VIEW_START=new Date(2026,9,1);
+const VIEW_END=new Date(2027,3,30);
+
+const CAREY={reg:23,ot:34.5,ded:0.2727,dayHours:10.5};
+const BAYLOR={reg:18.12,ot:27.69,ded:0.2443,dayHours:12};
+
+let state=JSON.parse(localStorage.getItem(STORE)||'{}');
+state.day=state.day||{};
+state.pay=state.pay||{};
+state.month=state.month||{};
+state.extras=state.extras||{};
+if(state.initialCushion===undefined) state.initialCushion=0;
+let cursor=new Date(2026,9,1);
+
+function save(){localStorage.setItem(STORE,JSON.stringify(state))}
+function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function fromIso(s){const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)}
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}
+function money(n){return (n<0?'-$':'$')+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function inRange(d,a,b){return d>=a&&d<=b}
+function sameDay(a,b){return iso(a)===iso(b)}
+function monthKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
+function weekdayMon0(d){return (d.getDay()+6)%7}
+
+function isCareyClosure(d){
+ return inRange(d,new Date(2026,10,21),new Date(2026,10,29)) ||
+        inRange(d,new Date(2026,11,18),new Date(2027,0,3));
 }
-function getCookie(name) {
-  const m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[.$?*|{}()[\]\\/+^]/g, '\\$&') + '=([^;]*)'));
-  return m ? decodeURIComponent(m[1]) : null;
-}
-function deleteCookie(name) {
-  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-}
-
-const CHUNK_SIZE = 3500; // margen seguro bajo el límite de ~4096 bytes por cookie
-
-function saveData(key, obj) {
-  const json = JSON.stringify(obj);
-  // limpia chunks previos de esta key
-  let i = 0;
-  while (getCookie(key + '_' + i) !== null) { deleteCookie(key + '_' + i); i++; }
-  deleteCookie(key + '_meta');
-
-  const chunks = [];
-  for (let pos = 0; pos < json.length; pos += CHUNK_SIZE) {
-    chunks.push(json.slice(pos, pos + CHUNK_SIZE));
-  }
-  chunks.forEach((chunk, idx) => setCookie(key + '_' + idx, chunk, 365));
-  setCookie(key + '_meta', String(chunks.length), 365);
-}
-
-function loadData(key, fallback) {
-  const count = parseInt(getCookie(key + '_meta') || '0', 10);
-  if (!count) return fallback;
-  let json = '';
-  for (let i = 0; i < count; i++) {
-    const chunk = getCookie(key + '_' + i);
-    if (chunk === null) return fallback; // datos corruptos/incompletos
-    json += chunk;
-  }
-  try { return JSON.parse(json); } catch (e) { return fallback; }
-}
-
-/* ---------------- Navegación de pestañas ---------------- */
-function switchTab(tab) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('nav.tabs button').forEach(el => el.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
-  document.querySelector('nav.tabs button[data-tab="' + tab + '"]').classList.add('active');
-  saveData('du_lasttab', tab);
-}
-
-/* ================= DEUDAS — única fuente de verdad ================= */
-// Tus 22 deudas reales, actualizadas a julio 2026 (mismos datos que snowball-dashboard.html,
-// ya con las correcciones de Regional Finance J./Vero y las 3 tarjetas Capital One agregadas).
-const SEED_DEBTS = [
-  {name:'Credit One Amex', tipo:'tarjeta', balance:423.35, rate:0.2899, min:30, limite:450, antiguedad:1.5, mesesRestantes:null, titular:'jhoan'},
-  {name:'Credit One Red', tipo:'tarjeta', balance:963.12, rate:0.2865, min:75, limite:1000, antiguedad:0.58, mesesRestantes:null, titular:'jhoan'},
-  {name:'Chase Amazon', tipo:'tarjeta', balance:1459.00, rate:0.2820, min:65, limite:1500, antiguedad:4.1, mesesRestantes:null, titular:'jhoan'},
-  {name:'Chase Slate', tipo:'tarjeta', balance:1464.73, rate:0.2799, min:50, limite:1500, antiguedad:5.1, mesesRestantes:null, titular:'jhoan'},
-  {name:'Upstart', tipo:'prestamo', balance:1594.79, rate:0.2084, min:63.91, limite:null, antiguedad:null, mesesRestantes:33, titular:'jhoan'},
-  {name:'Credit One 0091', tipo:'tarjeta', balance:1630.68, rate:0.2815, min:100, limite:1650, antiguedad:8, mesesRestantes:null, titular:'vero', autorizado:'jhoan'},
-  {name:'PayPal Mastercard', tipo:'tarjeta', balance:1752.66, rate:0.3039, min:65, limite:1800, antiguedad:3.67, mesesRestantes:null, titular:'jhoan'},
-  {name:'PayPal Credit', tipo:'tarjeta', balance:1802.85, rate:0.2949, min:65, limite:null, antiguedad:1.75, mesesRestantes:null, titular:'jhoan'},
-  {name:'Credit One 6625', tipo:'tarjeta', balance:2340.60, rate:0.2824, min:100, limite:2350, antiguedad:6.6, mesesRestantes:null, titular:'vero', autorizado:'jhoan'},
-  {name:'Oportun Jhoan', tipo:'prestamo', balance:2499.88, rate:0.2649, min:142.48, limite:null, antiguedad:null, mesesRestantes:31, titular:'jhoan'},
-  {name:'Chase Freedom', tipo:'tarjeta', balance:2491.33, rate:0.2799, min:82, limite:2500, antiguedad:6.3, mesesRestantes:null, titular:'vero', autorizado:'jhoan'},
-  {name:'Oportun Vero', tipo:'prestamo', balance:2144.91, rate:0.2649, min:212.00, limite:null, antiguedad:null, mesesRestantes:12, titular:'vero'},
-  {name:'Regional Vero', tipo:'prestamo', balance:2598.06, rate:0.3281, min:147.40, limite:null, antiguedad:null, mesesRestantes:22, titular:'vero'},
-  {name:'Regional Finance J.', tipo:'prestamo', balance:7252.49, rate:0.2823, min:276.72, limite:null, antiguedad:null, mesesRestantes:37, titular:'jhoan'},
-  {name:'Chase Sapphire', tipo:'tarjeta', balance:4959.84, rate:0.2749, min:200, limite:5000, antiguedad:3, mesesRestantes:null, titular:'vero', autorizado:'jhoan'},
-  {name:'Reprise', tipo:'prestamo', balance:5263.90, rate:0.3242, min:220.00, limite:null, antiguedad:null, mesesRestantes:39, titular:'vero'},
-  {name:'Best Buy', tipo:'tarjeta', balance:7900.00, rate:0.2899, min:300, limite:8000, antiguedad:7.08, mesesRestantes:null, titular:'vero', autorizado:'jhoan'},
-  {name:'Mazda 3 — Ally', tipo:'carro', balance:12304.23, rate:0.15957, min:649.78, limite:null, antiguedad:null, mesesRestantes:22, titular:'jhoan'},
-  {name:'Mazda CX-5 — Global Lending', tipo:'carro', balance:17478.80, rate:0.1645, min:444.10, limite:null, antiguedad:null, mesesRestantes:56, titular:'conjunta'},
-  {name:'Capital One Platinum ...5632', tipo:'tarjeta', balance:298.91, rate:0.3049, min:25, limite:300, antiguedad:5.08, mesesRestantes:null, titular:'jhoan'},
-  {name:'Capital One QuicksilverOne ...2432', tipo:'tarjeta', balance:254.23, rate:0.2874, min:25, limite:300, antiguedad:1.75, mesesRestantes:null, titular:'jhoan'},
-  {name:'QuicksilverOne Vero', tipo:'tarjeta', balance:140.12, rate:0.2899, min:25, limite:300, antiguedad:2.58, mesesRestantes:null, titular:'vero'},
-];
-
-let debts = loadData('du_debts', null);
-if (!debts) {
-  debts = SEED_DEBTS.map((d, i) => ({ id: 'd_' + i, ...d }));
-  saveData('du_debts', debts);
-} else {
-  // Migración: agrega titularidad a deudas ya guardadas que todavía no la tengan (sin tocar saldos/pagos).
-  const TITULARIDAD_MAP = {};
-  SEED_DEBTS.forEach(d => { TITULARIDAD_MAP[d.name] = { titular: d.titular, autorizado: d.autorizado }; });
-  let cambiado = false;
-  debts.forEach(d => {
-    if (d.titular === undefined && TITULARIDAD_MAP[d.name]) {
-      d.titular = TITULARIDAD_MAP[d.name].titular;
-      d.autorizado = TITULARIDAD_MAP[d.name].autorizado;
-      cambiado = true;
-    }
-  });
-  if (cambiado) saveData('du_debts', debts);
-}
-
-let editingDebtId = null;
-
-function fmt(n) {
-  const num = Number(n) || 0;
-  const sign = num < 0 ? '-' : '';
-  return sign + '$' + Math.abs(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-function tipoLabel(t) { return t === 'tarjeta' ? 'Tarjeta' : t === 'prestamo' ? 'Préstamo' : 'Carro'; }
-function esPlazoFijo(t) { return t === 'prestamo' || t === 'carro'; }
-function uidDebt() { return 'd_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
-
-function totalDeuda() { return debts.reduce((s, d) => s + Number(d.balance || 0), 0); }
-function totalMinimos() { return debts.reduce((s, d) => s + Number(d.min || 0), 0); }
-function tasaPromedioPonderada() {
-  const total = totalDeuda();
-  if (total <= 0) return 0;
-  return debts.reduce((s, d) => s + Number(d.balance || 0) * Number(d.rate || 0), 0) / total;
-}
-
-function renderDeudas() {
-  const sorted = [...debts].sort((a, b) => b.balance - a.balance);
-  const rows = sorted.map(d => editingDebtId === d.id ? renderEditDebt(d) : renderDebtRow(d)).join('');
-
-  return `
-    <div class="card">
-      <div class="stat-grid">
-        <div class="stat-box"><div class="label">Saldo total</div><div class="value accent">${fmt(totalDeuda())}</div></div>
-        <div class="stat-box"><div class="label">Mínimos combinados</div><div class="value">${fmt(totalMinimos())}/mes</div></div>
-      </div>
-    </div>
-    <div class="card">
-      <h2>Tus deudas (${debts.length})</h2>
-      <div class="legend">
-        <span><span class="dot" style="background:var(--blue)"></span>Tarjeta</span>
-        <span><span class="dot" style="background:var(--purple)"></span>Préstamo</span>
-        <span><span class="dot" style="background:var(--amber)"></span>Carro</span>
-      </div>
-      ${rows || '<div class="placeholder">Sin deudas registradas.</div>'}
-    </div>
-    <div class="card">
-      <button class="btn full" onclick="startAddDebt()">➕ Agregar deuda nueva</button>
-    </div>
-  `;
-}
-
-function renderDebtRow(d) {
-  const plazoTxt = esPlazoFijo(d.tipo)
-    ? (d.mesesRestantes ? ` · vence en <b style="color:var(--text)">${d.mesesRestantes}m</b>` : ' · <span style="color:var(--amber)">falta confirmar plazo</span>')
-    : (d.limite ? ` · límite ${fmt(d.limite)}` : '');
-  const antigTxt = d.antiguedad != null ? ` · antigüedad ${d.antiguedad}a` : '';
-  return `
-    <div class="debt-row">
-      <div class="debt-badge ${d.tipo}"></div>
-      <div class="info">
-        <div class="name">${d.name}</div>
-        <div class="meta">${tipoLabel(d.tipo)} · ${(d.rate * 100).toFixed(2)}% APR · mín ${fmt(d.min)}${plazoTxt}${antigTxt}</div>
-      </div>
-      <div>
-        <div class="amt">${fmt(d.balance)}</div>
-        <div class="actions">
-          <button class="icon-btn" onclick="startEditDebt('${d.id}')">✏️</button>
-          <button class="icon-btn" onclick="deleteDebt('${d.id}')">🗑️</button>
-        </div>
-      </div>
-    </div>`;
-}
-
-function renderEditDebt(d) {
-  const showPlazo = esPlazoFijo(d.tipo);
-  return `
-    <div class="edit-block">
-      <label>Nombre</label>
-      <input type="text" id="e_name" value="${d.name}">
-      <label>Tipo</label>
-      <select id="e_tipo" onchange="rerenderEditPlazo()">
-        <option value="tarjeta" ${d.tipo === 'tarjeta' ? 'selected' : ''}>Tarjeta</option>
-        <option value="prestamo" ${d.tipo === 'prestamo' ? 'selected' : ''}>Préstamo</option>
-        <option value="carro" ${d.tipo === 'carro' ? 'selected' : ''}>Carro</option>
-      </select>
-      <label>Saldo actual</label>
-      <input type="number" step="0.01" id="e_balance" value="${d.balance}">
-      <label>Tasa anual (%, ej. 28.99)</label>
-      <input type="number" step="0.01" id="e_rate" value="${(d.rate * 100).toFixed(2)}">
-      <label>Pago mínimo mensual</label>
-      <input type="number" step="0.01" id="e_min" value="${d.min}">
-      <div id="e_plazo_wrap" style="display:${showPlazo ? 'block' : 'none'}">
-        <label>Meses restantes (plazo fijo)</label>
-        <input type="number" id="e_meses" value="${d.mesesRestantes ?? ''}">
-      </div>
-      <div id="e_credito_wrap" style="display:${!showPlazo ? 'block' : 'none'}">
-        <label>Límite de crédito</label>
-        <input type="number" step="0.01" id="e_limite" value="${d.limite ?? ''}">
-        <label>Antigüedad de la cuenta (años)</label>
-        <input type="number" step="0.01" id="e_antiguedad" value="${d.antiguedad ?? ''}">
-      </div>
-      <div class="btn-row">
-        <button class="btn secondary" onclick="cancelEditDebt()">Cancelar</button>
-        <button class="btn" onclick="saveEditDebt('${d.id}')">Guardar</button>
-      </div>
-    </div>`;
-}
-
-function rerenderEditPlazo() {
-  const tipo = document.getElementById('e_tipo').value;
-  const showPlazo = esPlazoFijo(tipo);
-  document.getElementById('e_plazo_wrap').style.display = showPlazo ? 'block' : 'none';
-  document.getElementById('e_credito_wrap').style.display = !showPlazo ? 'block' : 'none';
-}
-
-function startEditDebt(id) { editingDebtId = id; renderDeudasTab(); }
-function cancelEditDebt() { editingDebtId = null; renderDeudasTab(); }
-
-function saveEditDebt(id) {
-  const d = debts.find(x => x.id === id);
-  if (!d) return;
-  d.name = document.getElementById('e_name').value.trim() || d.name;
-  d.tipo = document.getElementById('e_tipo').value;
-  d.balance = parseFloat(document.getElementById('e_balance').value) || 0;
-  d.rate = (parseFloat(document.getElementById('e_rate').value) || 0) / 100;
-  d.min = parseFloat(document.getElementById('e_min').value) || 0;
-  if (esPlazoFijo(d.tipo)) {
-    const meses = document.getElementById('e_meses').value;
-    d.mesesRestantes = meses === '' ? null : parseInt(meses);
-    d.limite = null; d.antiguedad = null;
-  } else {
-    const lim = document.getElementById('e_limite').value;
-    const ant = document.getElementById('e_antiguedad').value;
-    d.limite = lim === '' ? null : parseFloat(lim);
-    d.antiguedad = ant === '' ? null : parseFloat(ant);
-    d.mesesRestantes = null;
-  }
-  saveData('du_debts', debts);
-  editingDebtId = null;
-  renderDeudasTab();
-  renderProyeccionTab();
-  renderCreditoTab();
-  renderResumenTab();
-}
-
-function startAddDebt() {
-  const nueva = { id: uidDebt(), name: 'Nueva deuda', tipo: 'tarjeta', balance: 0, rate: 0.25, min: 0, limite: null, antiguedad: null, mesesRestantes: null };
-  debts.push(nueva);
-  saveData('du_debts', debts);
-  editingDebtId = nueva.id;
-  renderDeudasTab();
-  renderProyeccionTab();
-  renderCreditoTab();
-  renderResumenTab();
-}
-
-function deleteDebt(id) {
-  const d = debts.find(x => x.id === id);
-  if (!d) return;
-  const msg = d.balance > 0.005
-    ? `"${d.name}" todavía tiene un saldo de ${fmt(d.balance)} — borrarla la quita del plan de pago por completo. ¿Seguro que quieres eliminarla?`
-    : `¿Eliminar "${d.name}" por completo? Si solo llegó a $0, mejor déjala (sigue sumando a tu antigüedad promedio de crédito).`;
-  if (!confirm(msg)) return;
-  debts = debts.filter(x => x.id !== id);
-  saveData('du_debts', debts);
-  renderDeudasTab();
-  renderProyeccionTab();
-  renderCreditoTab();
-  renderResumenTab();
-}
-
-function renderDeudasTab() {
-  document.getElementById('deudas-container').innerHTML = renderDeudas();
-}
-
-/* ================= PAGOS SEMANA ================= */
-// Plantilla de fijos mensuales — mismos montos y días que presupuesto-dashboard.html,
-// con las correcciones ya decididas en la especificación:
-// - Oportun Vero: $106/quincena = min/2 (dinámico, ligado a la deuda)
-// - Oportun Jhoan: $65/quincena FIJO (no es la mitad automática del mínimo)
-// - Emilio: interés $170, se paga en los primeros 5 días del mes (no día 15)
-// - Mamá Vero: pausada solo en agosto 2026
-// - Camila y Santi: sin pausa
-const FIJOS_TEMPLATE = [
-  { day: 1, name: 'Renta (Zelle a Emilio)', monto: 1100 },
-  { day: 1, name: 'Camila', monto: 100 },
-  { day: 1, name: 'Oportun Vero (1ra quincena)', debtKey: 'Oportun Vero', quincenal: true },
-  { day: 3, name: 'Tío Emilio (interés)', monto: 170, meta: 'primeros 5 días del mes' },
-  { day: 5, name: 'Reprise', debtKey: 'Reprise' },
-  { day: 5, name: 'Credit One 0091', debtKey: 'Credit One 0091' },
-  { day: 6, name: 'Luz — Ambit Texas', monto: 267 },
-  { day: 6, name: 'Regional Finance J.', debtKey: 'Regional Finance J.' },
-  { day: 7, name: 'Oportun Jhoan (1ra quincena)', monto: 65, debtKeyForCompleta: 'Oportun Jhoan' },
-  { day: 7, name: 'Casa — Comida+Aseo+Agua (semana 1)', monto: 125, editable: true },
-  { day: 9, name: 'Credit One Amex', debtKey: 'Credit One Amex' },
-  { day: 10, name: 'Capital One Platinum ...5632', debtKey: 'Capital One Platinum ...5632' },
-  { day: 10, name: 'QuicksilverOne Vero', debtKey: 'QuicksilverOne Vero' },
-  { day: 11, name: 'PayPal Credit', debtKey: 'PayPal Credit' },
-  { day: 12, name: 'Planet Fitness', monto: 27 },
-  { day: 14, name: 'Casa — Comida+Aseo+Agua (semana 2)', monto: 125, editable: true },
-  { day: 14, name: 'Gasolina (Jhoan $180 + Vero $90)', monto: 200 },
-  { day: 14, name: 'Capital One QuicksilverOne ...2432', debtKey: 'Capital One QuicksilverOne ...2432' },
-  { day: 15, name: 'AT&T (neto, Emilio paga $50)', monto: 220 },
-  { day: 15, name: 'Credit One Red', debtKey: 'Credit One Red' },
-  { day: 15, name: 'Mamá Vero', monto: 60, pausaKey: 'mamavero' },
-  { day: 15, name: 'Oportun Vero (2da quincena)', debtKey: 'Oportun Vero', quincenal: true },
-  { day: 16, name: 'Chase Freedom', debtKey: 'Chase Freedom' },
-  { day: 18, name: 'PayPal Mastercard', debtKey: 'PayPal Mastercard' },
-  { day: 18, name: 'Mazda 3 — Ally', debtKey: 'Mazda 3 — Ally' },
-  { day: 18, name: 'Mazda CX-5 — Global Lending', debtKey: 'Mazda CX-5 — Global Lending' },
-  { day: 18, name: 'Ring', monto: 21 },
-  { day: 19, name: 'Chase Sapphire', debtKey: 'Chase Sapphire' },
-  { day: 21, name: 'Casa — Comida+Aseo+Agua (semana 3)', monto: 125, editable: true },
-  { day: 21, name: 'Best Buy', debtKey: 'Best Buy' },
-  { day: 21, name: 'Aseg. Apartamento', monto: 34 },
-  { day: 21, name: 'Oportun Jhoan (2da quincena)', monto: 65, debtKeyForCompleta: 'Oportun Jhoan' },
-  { day: 23, name: 'Chase Amazon', debtKey: 'Chase Amazon' },
-  { day: 23, name: 'Regional Vero', debtKey: 'Regional Vero' },
-  { day: 24, name: 'Chase Slate', debtKey: 'Chase Slate' },
-  { day: 24, name: 'Seg. Vida Banner Life (Vero)', monto: 35 },
-  { day: 27, name: 'Aseg. Perro — Banfield', monto: 64 },
-  { day: 28, name: 'Casa — Comida+Aseo+Agua (semana 4)', monto: 125, editable: true },
-  { day: 28, name: 'Credit One 6625', debtKey: 'Credit One 6625' },
-  { day: 28, name: 'Santi (España)', monto: 200 },
-  { day: 28, name: 'Upstart', debtKey: 'Upstart' },
-  { day: 30, name: 'Amazon Prime', monto: 17 },
-  { day: 30, name: 'Aseg. Carros — Nationwide', monto: 130 },
-  { day: 30, name: 'Google One', monto: 3 },
-  { day: 30, name: 'AI (ChatGPT/Claude)', monto: 20 },
-  { day: 30, name: 'Suscripción (falta nombrar)', monto: 20 },
-];
-
-const MESES_LARGO = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-const START_YM = { y: 2026, m: 7 }; // agosto 2026 = primer mes disponible en esta pestaña
-const N_MESES_DISPONIBLES = 12;
-
-function lastDayOfMonth(y, m) { return new Date(y, m + 1, 0).getDate(); }
-function ymKey(y, m) { return y + '-' + String(m + 1).padStart(2, '0'); }
-function mesIdxToYM(idx) {
-  let y = START_YM.y, m = START_YM.m + idx;
-  while (m > 11) { m -= 12; y++; }
-  return { y, m };
-}
-
-let pagState = loadData('du_pagossem', null);
-if (!pagState) {
-  pagState = {
-    mesIdx: 0,
-    pagosMarcados: {},   // key -> true/false
-    montoAplicado: {},   // key -> monto que se aplicó al saldo/deuda cuando se marcó
-    saldoRealBase: {},   // mesKey -> número (saldo real en el banco al iniciar el mes)
-    saldoSobranteAnt: {}, // mesKey -> número (casi siempre 0)
-    variables: {},        // mesKey -> [{id, desc, monto, semana}] — gastos fuera de lo fijo (restaurante, Amazon, etc.)
-    montosEditados: {}   // "mesKey|fijoKey" -> número — override para fijos editables (ej. "Casa", compra real de esa semana)
-  };
-  saveData('du_pagossem', pagState);
-} else if (!pagState.variables) {
-  pagState.variables = {};
-  saveData('du_pagossem', pagState);
-}
-if (!pagState.montosEditados) {
-  pagState.montosEditados = {};
-  saveData('du_pagossem', pagState);
-}
-function guardarPagState() { saveData('du_pagossem', pagState); }
-
-// Cadena real de cheques semanales, alternando Baylor/Carey+Aramark, ambos viernes,
-// desde el ancla confirmada: 31-jul-2026 = Baylor $1,700 (real, ya cobrado).
-// IMPORTANTE (corrección del usuario): el ÚLTIMO cheque que cae dentro de un mes
-// (el que aterriza en la semana 4, día ~28) NO es dinero de ese mes — es el saldo
-// inicial con el que arranca la semana 1 del mes siguiente, antes de que llegue
-// el primer cheque de ese mes siguiente. Por eso cada mes solo "gasta" los cheques
-// que caen en sus semanas 1-3, y el de semana 4 se traslada.
-const CHECK_ANCHOR = new Date(2026, 6, 31); // 31 julio 2026
-function chequeInfo(i) {
-  const date = new Date(CHECK_ANCHOR.getTime() + i * 7 * 86400000);
-  const fuente = i % 2 === 0 ? 'Baylor Medical' : 'Carey + Aramark';
-  const monto = i === 0 ? 1700 : (i % 2 === 0 ? 1500 : 1800); // i=0 es el real ya cobrado; el resto presupuestado
-  return { i, date, fuente, monto, day: date.getDate() };
-}
-function chequesDelMes(y, m) {
-  const todos = [];
-  for (let i = 0; i < 100; i++) {
-    const c = chequeInfo(i);
-    if (c.date.getFullYear() === y && c.date.getMonth() === m) todos.push(c);
-    if (c.date.getFullYear() > y + 1) break;
-  }
-  todos.sort((a, b) => a.date - b.date);
-  const deferido = todos.length ? todos[todos.length - 1] : null;
-  const mostrados = todos.slice(0, -1); // todos menos el último (semana 1-3)
-  return { mostrados, deferido };
-}
-function saldoBaseSugerido(y, m) {
-  // Agosto 2026 es un caso especial confirmado: cheque real del 31-jul ($1,700) + $500 sobrante de julio = $2,200
-  if (y === 2026 && m === 7) return 2200;
-  let py = y, pm = m - 1;
-  if (pm < 0) { pm = 11; py--; }
-  const prev = chequesDelMes(py, pm);
-  return prev.deferido ? prev.deferido.monto : 0;
-}
-
-function fijosDelMes(y, m) {
-  const mk = ymKey(y, m);
-  return FIJOS_TEMPLATE.map((f, i) => {
-    const item = { ...f, idx: i, key: 'fijo_' + i };
-    // pausas
-    if (f.pausaKey === 'mamavero') {
-      item.pausado = (y === 2026 && m === 7); // agosto 2026 = mes 7 (0-index)
-    }
-    // deudas: monto dinámico ligado a du_debts (única fuente de verdad)
-    if (f.debtKey) {
-      const d = debts.find(x => x.name === f.debtKey);
-      if (!d || d.balance <= 0.005) {
-        item.pausado = true;
-        item.pausadoTxt = 'ya liquidada';
-      } else {
-        item.monto = f.quincenal ? Math.round((d.min / 2) * 100) / 100 : d.min;
-      }
-    }
-    if (f.debtKeyForCompleta) {
-      const d = debts.find(x => x.name === f.debtKeyForCompleta);
-      if (!d || d.balance <= 0.005) { item.pausado = true; item.pausadoTxt = 'ya liquidada'; }
-    }
-    // montos editables (ej. "Casa" — compras reales varían semana a semana, no siempre es el mismo monto)
-    if (f.editable) {
-      const override = pagState.montosEditados[mk + '|' + item.key];
-      if (override !== undefined) item.monto = override;
-    }
-    return item;
-  });
-}
-
-function updateMontoEditado(mesKey, key, val) {
-  const num = val === '' ? undefined : parseFloat(val);
-  if (num === undefined || isNaN(num)) delete pagState.montosEditados[mesKey + '|' + key];
-  else pagState.montosEditados[mesKey + '|' + key] = num;
-  guardarPagState();
-  renderPagosSemanaTab();
-}
-
-function togglePagoFijo(mesKey, item) {
-  const key = mesKey + '|' + item.key;
-  const yaMarcado = !!pagState.pagosMarcados[key];
-  if (!yaMarcado) {
-    // marcar como pagado: si está ligado a una deuda (min payment), reduce el saldo real
-    const debtName = item.debtKey || item.debtKeyForCompleta;
-    if (debtName && item.debtKey) { // solo min payments quincenales/mensuales reducen saldo, no los "pagar completa"
-      const d = debts.find(x => x.name === debtName);
-      if (d) {
-        d.balance = Math.max(0, Math.round((d.balance - item.monto) * 100) / 100);
-        saveData('du_debts', debts);
-      }
-    }
-    pagState.pagosMarcados[key] = true;
-    pagState.montoAplicado[key] = item.monto;
-  } else {
-    // desmarcar: revertir exactamente el monto que se aplicó
-    const montoRevertir = pagState.montoAplicado[key] || 0;
-    const debtName = item.debtKey || item.debtKeyForCompleta;
-    if (debtName && item.debtKey) {
-      const d = debts.find(x => x.name === debtName);
-      if (d) {
-        d.balance = Math.round((d.balance + montoRevertir) * 100) / 100;
-        saveData('du_debts', debts);
-      }
-    }
-    pagState.pagosMarcados[key] = false;
-    delete pagState.montoAplicado[key];
-  }
-  guardarPagState();
-  renderPagosSemanaTab();
-  renderDeudasTab();
-  renderProyeccionTab();
-  renderCreditoTab();
-  renderResumenTab();
-}
-
-function toggleChequeMarcado(mesKey, cheque) {
-  const key = mesKey + '|' + (cheque.esAramarkPar ? cheque.i : 'cheque_' + cheque.i);
-  pagState.pagosMarcados[key] = !pagState.pagosMarcados[key];
-  guardarPagState();
-  renderPagosSemanaTab();
-}
-
-function pagarDeudaCompletaSemana(debtName) {
-  const d = debts.find(x => x.name === debtName);
-  if (!d) return;
-  if (!confirm(`¿Marcar "${debtName}" como pagada por completo? Esto pone el saldo en $0.`)) return;
-  d.balance = 0;
-  saveData('du_debts', debts);
-  renderPagosSemanaTab();
-  renderDeudasTab();
-  renderProyeccionTab();
-  renderCreditoTab();
-  renderResumenTab();
-}
-
-function cambiarMesPagState(delta) {
-  const nuevo = pagState.mesIdx + delta;
-  if (nuevo < 0 || nuevo >= N_MESES_DISPONIBLES) return;
-  pagState.mesIdx = nuevo;
-  guardarPagState();
-  renderPagosSemanaTab();
-  renderChequesTab();
-}
-
-function updateSaldoRealBase(mesKey, val) {
-  pagState.saldoRealBase[mesKey] = val === '' ? 0 : parseFloat(val);
-  guardarPagState();
-  renderPagosSemanaTab();
-}
-function updateSaldoSobranteAnt(mesKey, val) {
-  pagState.saldoSobranteAnt[mesKey] = val === '' ? 0 : parseFloat(val);
-  guardarPagState();
-  renderPagosSemanaTab();
-}
-
-function agregarVariable(mesKey, semanaIdx) {
-  const descEl = document.getElementById('var_desc_' + mesKey + '_' + semanaIdx);
-  const montoEl = document.getElementById('var_monto_' + mesKey + '_' + semanaIdx);
-  const desc = (descEl.value || 'Gasto variable').trim();
-  const monto = parseFloat(montoEl.value) || 0;
-  if (monto <= 0) return;
-  if (!pagState.variables[mesKey]) pagState.variables[mesKey] = [];
-  pagState.variables[mesKey].push({ id: uidDebt(), desc, monto, semana: semanaIdx });
-  guardarPagState();
-  renderPagosSemanaTab();
-}
-function eliminarVariable(mesKey, id) {
-  if (!pagState.variables[mesKey]) return;
-  pagState.variables[mesKey] = pagState.variables[mesKey].filter(v => v.id !== id);
-  guardarPagState();
-  renderPagosSemanaTab();
-}
-
-function renderPagosSemana() {
-  const { y, m } = mesIdxToYM(pagState.mesIdx);
-  const mk = ymKey(y, m);
-  const ult = lastDayOfMonth(y, m);
-  const fijos = fijosDelMes(y, m);
-  const { mostrados: careyBaylor, deferido } = chequesDelMes(y, m);
-
-  // Aramark (Vero) llega prácticamente el mismo día que Carey (según confirmaste con los comprobantes).
-  // Se pega justo debajo de cada cheque de Carey, usando EL MISMO día que Carey para que
-  // no queden separados de semana — aunque en la cadena real caiga 1 día antes.
-  const cheques = [];
-  careyBaylor.forEach(c => {
-    cheques.push(c);
-    if (c.fuente === 'Carey + Aramark') {
-      const ai = (c.i + 1) / 2;
-      const a = aramarkChequeInfo(ai);
-      cheques.push({ i: 'aramark_' + ai, date: a.date, fuente: 'Aramark (Vero)', monto: BASELINE_ARAMARK, day: c.day, esAramarkPar: true });
-    }
-  });
-  let deferidoAramark = null;
-  if (deferido && deferido.fuente === 'Carey + Aramark') {
-    const ai = (deferido.i + 1) / 2;
-    const a = aramarkChequeInfo(ai);
-    deferidoAramark = { fuente: 'Aramark (Vero)', monto: BASELINE_ARAMARK, day: deferido.day };
-  }
-
-  const tieneBaseManual = Object.prototype.hasOwnProperty.call(pagState.saldoRealBase, mk);
-  const saldoBase = tieneBaseManual ? pagState.saldoRealBase[mk] : saldoBaseSugerido(y, m);
-  const sobranteAnt = pagState.saldoSobranteAnt[mk] || 0;
-  const variablesMes = pagState.variables[mk] || [];
-
-  // "Saldo real hoy" en vivo: base + sobrante anterior + cheques marcados - fijos marcados - variables
-  let saldoLive = saldoBase + sobranteAnt;
-  fijos.forEach(f => { if (!f.pausado && pagState.pagosMarcados[mk + '|' + f.key]) saldoLive -= f.monto; });
-  cheques.forEach(c => { if (pagState.pagosMarcados[mk + '|' + (c.esAramarkPar ? c.i : 'cheque_' + c.i)]) saldoLive += c.monto; });
-  variablesMes.forEach(v => { saldoLive -= v.monto; });
-
-  const nextMonthLabel = (() => { let ny = y, nm = m + 1; if (nm > 11) { nm = 0; ny++; } return MESES_LARGO[nm] + ' ' + ny; })();
-
-  const bloques = [[1, 7], [8, 14], [15, 21], [22, ult]];
-  const semanasHtml = bloques.map((b, wi) => {
-    const itemsFijos = fijos.filter(f => f.day >= b[0] && f.day <= b[1]);
-    const itemsCheques = cheques.filter(c => c.day >= b[0] && c.day <= b[1]);
-    const itemsVariables = variablesMes.filter(v => v.semana === wi);
-    const totalVariablesSemana = itemsVariables.reduce((s, v) => s + v.monto, 0);
-    const esUltimaSemana = wi === bloques.length - 1;
-    const activos = itemsFijos.filter(f => !f.pausado);
-    const totalSemana = activos.reduce((s, f) => s + f.monto, 0);
-    const pendienteSemana = activos.filter(f => !pagState.pagosMarcados[mk + '|' + f.key]).reduce((s, f) => s + f.monto, 0);
-    const alcanza = saldoLive >= pendienteSemana;
-    const alerta = pendienteSemana > 0.005 ? `
-      <div class="alerta-semana ${alcanza ? 'ok' : 'bad'}">
-        ${alcanza
-          ? `✅ Tu saldo actual cubre lo pendiente de esta semana (sobrarían ${fmt(saldoLive - pendienteSemana)})`
-          : `⚠️ Con tu saldo real hoy no alcanza para lo pendiente de esta semana — te faltan ${fmt(pendienteSemana - saldoLive)}`}
-      </div>` : '';
-    const filas = [
-      ...itemsCheques.map(c => renderChequeRow(mk, c)),
-      ...itemsFijos.map(f => renderFijoRow(mk, f))
-    ].join('');
-    const filasVariables = itemsVariables.map(v => `
-      <div class="sem-item">
-        <div class="sem-check" style="visibility:hidden;"></div>
-        <div class="info">
-          <div class="nom">🛒 ${v.desc}</div>
-          <div class="meta">gasto variable</div>
-        </div>
-        <div class="monto">-${fmt(v.monto)}</div>
-        <button class="icon-btn" onclick="eliminarVariable('${mk}','${v.id}')" style="margin-left:4px;">🗑️</button>
-      </div>`).join('');
-    const variablesBlock = `
-      <div style="padding:8px 0;border-top:1px dashed var(--border);margin-top:4px;">
-        ${filasVariables}
-        <div style="display:flex;gap:6px;margin-top:6px;">
-          <input type="text" id="var_desc_${mk}_${wi}" placeholder="ej. Restaurante, Amazon..." style="flex:1.3;background:var(--bg);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:12px;padding:7px 8px;">
-          <input type="number" step="0.01" id="var_monto_${mk}_${wi}" placeholder="$" style="flex:0.7;background:var(--bg);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:12px;padding:7px 8px;font-family:'JetBrains Mono',monospace;">
-          <button class="icon-btn" onclick="agregarVariable('${mk}',${wi})" style="background:var(--accent-dim);color:var(--accent);border-radius:7px;padding:0 10px;font-size:16px;">+</button>
-        </div>
-        ${totalVariablesSemana > 0 ? `<div style="font-size:10.5px;color:var(--text-muted);margin-top:4px;">Total variable esta semana: ${fmt(totalVariablesSemana)}</div>` : ''}
-      </div>`;
-    const notaDiferido = (esUltimaSemana && deferido) ? `
-      <div class="sem-item pausado">
-        <div class="sem-check"></div>
-        <div class="info">
-          <div class="nom">${deferido.fuente} (${deferido.day}-${MESES_LARGO[m].slice(0,3).toLowerCase()})</div>
-          <div class="meta">no se gasta este mes — pasa como saldo inicial de ${nextMonthLabel}</div>
-        </div>
-        <div class="monto">${fmt(deferido.monto)}</div>
-      </div>
-      ${deferidoAramark ? `
-      <div class="sem-item pausado">
-        <div class="sem-check"></div>
-        <div class="info">
-          <div class="nom">${deferidoAramark.fuente} (${deferidoAramark.day}-${MESES_LARGO[m].slice(0,3).toLowerCase()})</div>
-          <div class="meta">no se gasta este mes — pasa como saldo inicial de ${nextMonthLabel}</div>
-        </div>
-        <div class="monto">${fmt(deferidoAramark.monto)}</div>
-      </div>` : ''}` : '';
-    return `
-      <div class="card">
-        <div class="sem-head"><span>Semana ${wi + 1} (día ${b[0]}–${b[1]})</span></div>
-        <div class="sem-resumen">
-          <span>Total a pagar: <b>${fmt(totalSemana)}</b></span>
-          <span>Pendiente: <b style="color:${pendienteSemana>0.005?'var(--amber)':'var(--accent)'}">${fmt(pendienteSemana)}</b></span>
-        </div>
-        ${filas || '<div style="font-size:12px;color:var(--text-muted);">Sin movimientos.</div>'}
-        ${notaDiferido}
-        ${variablesBlock}
-        ${alerta}
-      </div>`;
-  }).join('');
-
-  return `
-    <div class="card mesnav">
-      <button onclick="cambiarMesPagState(-1)" ${pagState.mesIdx === 0 ? 'disabled' : ''}>← Anterior</button>
-      <span class="lbl">${MESES_LARGO[m]} ${y}</span>
-      <button onclick="cambiarMesPagState(1)" ${pagState.mesIdx === N_MESES_DISPONIBLES - 1 ? 'disabled' : ''}>Siguiente →</button>
-    </div>
-    <div class="box-row">
-      <div class="card">
-        <div class="label">💳 Saldo real hoy</div>
-        <div class="val live">${fmt(saldoLive)}</div>
-        <input class="manual" type="number" step="0.01" value="${saldoBase}" onchange="updateSaldoRealBase('${mk}', this.value)">
-        <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">↑ saldo base del mes${tieneBaseManual ? '' : ' (sugerido — edítalo si no cuadra)'}</div>
-      </div>
-      <div class="card">
-        <div class="label">💰 Sobró del mes anterior</div>
-        <input class="manual" type="number" step="0.01" value="${sobranteAnt}" onchange="updateSaldoSobranteAnt('${mk}', this.value)">
-        <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">casi siempre $0 — ya se abona a deuda al cierre</div>
-      </div>
-    </div>
-    ${semanasHtml}
-  `;
-}
-
-function renderChequeRow(mk, c) {
-  const key = mk + '|' + (c.esAramarkPar ? c.i : 'cheque_' + c.i);
-  const checked = !!pagState.pagosMarcados[key];
-  return `
-    <div class="sem-item ${checked ? 'checked' : ''}">
-      <div class="sem-check ${checked ? 'on' : ''}" onclick='toggleChequeMarcado("${mk}", ${JSON.stringify(c)})'>${checked ? '✓' : ''}</div>
-      <div class="info">
-        <div class="nom">+ ${c.fuente}</div>
-        <div class="meta">día ${c.day} · monto presupuestado (no el real de Cheques)</div>
-      </div>
-      <div class="monto in">+${fmt(c.monto)}</div>
-    </div>`;
-}
-
-function renderFijoRow(mk, f) {
-  if (f.pausado) {
-    return `
-      <div class="sem-item pausado">
-        <div class="sem-check"></div>
-        <div class="info">
-          <div class="nom">${f.name}</div>
-          <div class="meta">día ${f.day} · ${f.pausadoTxt || 'pausado este mes'}</div>
-        </div>
-        <div class="monto">—</div>
-      </div>`;
-  }
-  const key = mk + '|' + f.key;
-  const checked = !!pagState.pagosMarcados[key];
-  const debtName = f.debtKey || f.debtKeyForCompleta;
-  const botonCompleta = debtName ? `<button class="pagarcompleta" onclick="pagarDeudaCompletaSemana('${debtName}')">Pagar completa</button>` : '';
-  const editorMonto = f.editable ? `
-        <div style="display:flex;align-items:center;gap:6px;margin-top:5px;">
-          <span style="font-size:10px;color:var(--text-muted);">Gasto real:</span>
-          <input type="number" step="0.01" value="${f.monto}" onchange="updateMontoEditado('${mk}','${f.key}', this.value)"
-            style="width:80px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:11.5px;padding:3px 6px;font-family:'JetBrains Mono',monospace;">
-        </div>` : '';
-  return `
-    <div class="sem-item ${checked ? 'checked' : ''}">
-      <div class="sem-check ${checked ? 'on' : ''}" onclick='togglePagoFijo("${mk}", ${JSON.stringify(f)})'>${checked ? '✓' : ''}</div>
-      <div class="info">
-        <div class="nom">${f.name}</div>
-        <div class="meta">día ${f.day}${f.debtKey ? ' · solo mínimo' : ''}${f.meta ? ' · ' + f.meta : ''}</div>
-        ${botonCompleta}
-        ${editorMonto}
-      </div>
-      <div class="monto">-${fmt(f.monto)}</div>
-    </div>`;
-}
-
-function renderPagosSemanaTab() {
-  const el = document.getElementById('pagossem-container');
-  if (el) el.innerHTML = renderPagosSemana();
-}
-
-/* ================= CHEQUES ================= */
-// Carey/Baylor: cadena de CHECK_ANCHOR (viernes, definida en Pagos semana).
-// Aramark: cadena PROPIA — es el sueldo de Vero, NO va pegado al cheque de Carey.
-// Confirmado con 7 comprobantes reales subidos al proyecto: quincenal, siempre jueves,
-// tarifa $16.43/h regular + ~$17.33/h en horas con diferencial de turno, deducción real 25.02%.
-const TARIFA_REGULAR_CAREY = 23;
-const TARIFA_OVERTIME_CAREY = 34.50;
-const DEDUCCION_CAREY = 0.2727; // confirmado en comprobantes ADP de Jhoan
-
-const TARIFA_REGULAR_ARAMARK = 16.43;
-const TARIFA_DIFERENCIAL_ARAMARK = 17.33; // promedio de los ~$17.23-$17.43/h de shift diff vistos en los comprobantes
-const DEDUCCION_ARAMARK = 0.2502; // confirmado en 7 comprobantes reales de Vero (excluyendo el mes con descuento único de zapatos)
-
-// Baylor (Vero) — confirmado con 5 comprobantes ADP reales (mayo-julio 2026).
-// Sin diferenciales por separado (nocturno/fin de semana son centavos, ya absorbidos en la tarifa OT blended) — calculadora simple a propósito.
-const TARIFA_REGULAR_BAYLOR = 18.12;
-const TARIFA_OVERTIME_BAYLOR = 27.69; // tarifa efectiva blended (incluye el 0.5x de FLSA sobre tarifa regular ajustada), consistente en los 5 comprobantes
-const DEDUCCION_BAYLOR = 0.2443; // promedio real de los 5 comprobantes (rango 24.00%-25.06%)
-
-const BASELINE_CAREY = 1800;   // base para el colchón
-const BASELINE_ARAMARK = 300;  // esperado MÍNIMO confirmado — Aramark no tiene monto fijo, este es el piso
-const BASELINE_BAYLOR = 1500;  // esperado ya usado en la cadena de Pagos semana
-
-const ARAMARK_ANCHOR = new Date(2026, 6, 23); // 23-jul-2026, jueves, cheque real ya confirmado en comprobante
-
-// Esperado especial de Carey en semanas con cierre/feriado (proyección conocida, NO es "real" todavía).
-const ESPERADO_ESPECIAL_CAREY = {
-  '2026-09-18': 1572.42, // Labor Day
-  '2026-12-11': 1384.23, // Thanksgiving
-  '2026-12-25': 1702.06, // pierde el viernes 18
-  '2027-01-08': 936.76,  // vacación/feriados fin de año
+const careyHoliday={
+ '2026-11-26':{type:'holiday',hours:8,label:'Thanksgiving'},
+ '2026-11-27':{type:'holiday',hours:8,label:'Black Friday'},
+ '2026-12-25':{type:'holiday',hours:8,label:'Christmas'},
+ '2027-01-01':{type:'holiday',hours:8,label:'New Year'}
 };
+const careyPersonal={'2026-11-25':{type:'personal',hours:8,label:'Personal / Birthday'}};
+const careyPtoDates=new Set(['2026-12-21','2026-12-22','2026-12-23','2026-12-24','2026-12-28','2026-12-29','2026-12-30','2026-12-31']);
 
-let chqState = loadData('du_cheques', null);
-if (!chqState) {
-  chqState = { real: {}, cubierto: {}, horasCareyCalc: { reg: 105, ot: 0, vac: 0 } };
-  saveData('du_cheques', chqState);
-}
-function guardarChqState() { saveData('du_cheques', chqState); }
+function plannedEntries(d){
+ const s=iso(d), arr=[];
+ const wd=d.getDay();
 
-function aramarkChequeInfo(i) {
-  const date = new Date(ARAMARK_ANCHOR.getTime() + i * 14 * 86400000);
-  return { i, date, fuente: 'Aramark (Vero)', day: date.getDate() };
-}
+ // Carey
+ if(careyHoliday[s]) arr.push({who:'carey',...careyHoliday[s]});
+ else if(careyPersonal[s]) arr.push({who:'carey',...careyPersonal[s]});
+ else if(careyPtoDates.has(s)) arr.push({who:'carey',type:'vac',hours:8,label:'PTO Carey'});
+ else if(wd>=1 && wd<=5 && !isCareyClosure(d)) arr.push({who:'carey',type:'work',hours:10.5,label:'Carey 5:30–16:00'});
+ else if(wd>=1 && wd<=5 && isCareyClosure(d)) arr.push({who:'carey',type:'closed',hours:0,label:'Carey cerrado'});
 
-function todosChequesDelMes(y, m) {
-  const todos = [];
-  for (let i = 0; i < 100; i++) {
-    const c = chequeInfo(i);
-    if (c.date.getFullYear() === y && c.date.getMonth() === m) todos.push({ ...c, tipo: 'careybaylor' });
-    if (c.date.getFullYear() > y + 1) break;
-  }
-  for (let i = -20; i < 100; i++) { // -20 para poder ver quincenas de Aramark anteriores al ancla si se navega hacia atrás
-    const c = aramarkChequeInfo(i);
-    if (c.date.getFullYear() === y && c.date.getMonth() === m) todos.push({ ...c, tipo: 'aramark' });
-    if (c.date.getFullYear() > y + 1) break;
-  }
-  todos.sort((a, b) => a.date - b.date);
-  return todos;
-}
-function fechaISO(date) { return date.toISOString().slice(0, 10); }
-
-function esperadoCarey(iso) { return ESPERADO_ESPECIAL_CAREY[iso] !== undefined ? ESPERADO_ESPECIAL_CAREY[iso] : BASELINE_CAREY; }
-
-function updateChequeReal(key, val) {
-  chqState.real[key] = val === '' ? undefined : parseFloat(val);
-  if (chqState.real[key] === undefined) delete chqState.real[key];
-  guardarChqState();
-  renderChequesTab();
-}
-function toggleChequeCubierto(key) {
-  chqState.cubierto[key] = !chqState.cubierto[key];
-  guardarChqState();
-  renderChequesTab();
+ // Baylor
+ if([0,2,3,6].includes(wd)){
+   if(inRange(d,new Date(2026,10,10),new Date(2026,10,20))){
+     arr.push({who:'baylor',type:'vac',hours:12,label:'Baylor · vacaciones'});
+   } else {
+     arr.push({who:'baylor',type:'work',hours:12,label:'Baylor · 12 h'});
+   }
+ }
+ // manual extras
+ const ex=state.extras[s]||[];
+ ex.forEach(e=>arr.push({...e,extra:true}));
+ return arr;
 }
 
-/* ---- Calculadora única de Carey (arriba de la lista) — no se guarda, solo orienta.
-   Aramark y Baylor tienen su propia calculadora aparte (calculadora-vero.html), para Vero. ---- */
-function calcularEstimadoCarey() {
-  const reg = parseFloat(document.getElementById('calc_carey_reg').value) || 0;
-  const ot = parseFloat(document.getElementById('calc_carey_ot').value) || 0;
-  const vac = parseFloat(document.getElementById('calc_carey_vac').value) || 0;
-  const gross = reg * TARIFA_REGULAR_CAREY + ot * TARIFA_OVERTIME_CAREY + vac * TARIFA_REGULAR_CAREY;
-  const neto = gross * (1 - DEDUCCION_CAREY);
-  const el = document.getElementById('calc_carey_resultado');
-  if (el) el.innerHTML = `${fmt(neto)} <span style="font-size:11px;color:var(--text-muted);font-weight:400;">neto (${fmt(gross)} gross)</span>`;
-  return neto;
+function entryId(d,e,idx){return iso(d)+'|'+e.who+'|'+e.type+'|'+idx}
+function entryStatus(d,e,idx){
+ const id=entryId(d,e,idx);
+ if(!state.day[id]) state.day[id]={done:false,missed:false};
+ return state.day[id];
+}
+function toggleDone(id){state.day[id]=state.day[id]||{};state.day[id].done=!state.day[id].done;if(state.day[id].done)state.day[id].missed=false;save();render()}
+function toggleMissed(id){state.day[id]=state.day[id]||{};state.day[id].missed=!state.day[id].missed;if(state.day[id].missed)state.day[id].done=false;save();render()}
+function addExtra(s,who){
+ const hrs=who==='carey'?10.5:12;
+ state.extras[s]=state.extras[s]||[];
+ state.extras[s].push({who,type:'work',hours:hrs,label:(who==='carey'?'Carey':'Baylor')+' · EXTRA'});
+ save();render();
+}
+function removeExtra(s,index){
+ const arr=state.extras[s]||[]; arr.splice(index,1); state.extras[s]=arr; save();render();
 }
 
-function colchonAcumuladoTotal() {
-  // Colchón COMPARTIDO: suma (real - esperado_base) de Carey, Aramark Y Baylor, los tres al mismo pozo.
-  let colchon = 0, n = 0;
-  const { y: endY, m: endM } = mesIdxToYM(N_MESES_DISPONIBLES - 1);
-  const endDate = new Date(endY, endM + 1, 0);
-  for (let i = 0; i < 200; i++) {
-    const c = chequeInfo(i);
-    if (c.date > endDate) break;
-    if (i % 2 === 1) { // impar = Carey
-      const realCarey = chqState.real[i + '_carey'];
-      if (realCarey !== undefined) { colchon += (realCarey - BASELINE_CAREY); n++; }
-    } else { // par = Baylor
-      const realBaylor = chqState.real[i + '_baylor'];
-      if (realBaylor !== undefined) { colchon += (realBaylor - BASELINE_BAYLOR); n++; }
-    }
-  }
-  for (let i = -20; i < 200; i++) {
-    const c = aramarkChequeInfo(i);
-    if (c.date > endDate) break;
-    const realAramark = chqState.real['aramark_' + i];
-    if (realAramark !== undefined) { colchon += (realAramark - BASELINE_ARAMARK); n++; }
-  }
-  return { colchon, n };
+function effectiveEntries(start,end,who,mode='plan'){
+ const out=[];
+ for(let d=new Date(start);d<=end;d=addDays(d,1)){
+   plannedEntries(d).forEach((e,idx)=>{
+     if(e.who!==who || e.type==='closed') return;
+     const st=entryStatus(d,e,idx);
+     if(st.missed) return;
+     if(mode==='done' && !st.done) return;
+     out.push({date:new Date(d),...e});
+   });
+ }
+ return out;
 }
 
-function renderSubcheque(label, key, esperado) {
-  const real = chqState.real[key];
-  const cubierto = !!chqState.cubierto[key];
-  const diff = real !== undefined ? real - esperado : null;
-  return `
-    <div>
-      <div style="font-size:12.5px;font-weight:700;margin-bottom:6px;">${label}</div>
-      <div class="grid2">
-        <div><label>Esperado</label><input type="number" value="${esperado}" readonly style="opacity:0.6;"></div>
-        <div><label>Real</label><input type="number" step="0.01" value="${real !== undefined ? real : ''}" placeholder="— aún no llega" onchange="updateChequeReal('${key}', this.value)"></div>
-      </div>
-      ${diff !== null ? `
-        <div class="diff-row">
-          <span style="color:var(--text-muted);">Diferencia vs. esperado</span>
-          <span class="v" style="color:${diff>=0?'var(--accent)':'var(--red)'}">${diff>=0?'+':''}${fmt(diff)}</span>
-        </div>` : ''}
-      <div class="cubierto-row">
-        <div class="cubierto-chk ${cubierto?'on':''}" onclick="toggleChequeCubierto('${key}')">${cubierto?'✓':''}</div>
-        <span>Faltante/sobrante ya cubierto con el colchón</span>
-      </div>
-    </div>`;
+function weekKeyMonday(d){
+ const x=new Date(d); x.setDate(x.getDate()-weekdayMon0(x)); return iso(x);
+}
+function payrollNet(entries,job){
+ const cfg=job==='carey'?CAREY:BAYLOR;
+ const byWeek={};
+ entries.forEach(e=>{
+   const wk=weekKeyMonday(e.date);
+   byWeek[wk]=byWeek[wk]||{work:0,straight:0};
+   if(e.type==='work') byWeek[wk].work+=e.hours;
+   else if(['vac','holiday','personal'].includes(e.type)) byWeek[wk].straight+=e.hours;
+ });
+ let gross=0, regH=0, otH=0, straightH=0;
+ Object.values(byWeek).forEach(w=>{
+   const reg=Math.min(w.work,40), ot=Math.max(0,w.work-40);
+   regH+=reg; otH+=ot; straightH+=w.straight;
+   gross += reg*cfg.reg + ot*cfg.ot + w.straight*cfg.reg;
+ });
+ return {gross,net:gross*(1-cfg.ded),regH,otH,straightH};
 }
 
-function renderChequeCard(c) {
-  const iso = fechaISO(c.date);
-  if (c.tipo === 'careybaylor') {
-    const esCarey = c.fuente === 'Carey + Aramark';
-    if (esCarey) {
-      const esperCarey = esperadoCarey(iso);
-      return `
-        <div class="card cheque-card">
-          <div class="head"><span class="fuente">💼 Carey (Jhoan)</span><span class="fecha">${iso}</span></div>
-          ${renderSubcheque('Carey', c.i + '_carey', esperCarey)}
-        </div>`;
-    }
-    const esHistorico = c.i === 0;
-    return `
-      <div class="card cheque-card">
-        <div class="head"><span class="fuente">Baylor Medical${esHistorico ? ' <span class="historico-tag">ya cobrado</span>' : ''}</span><span class="fecha">${iso}</span></div>
-        ${renderSubcheque('Baylor', c.i + '_baylor', c.monto)}
-      </div>`;
-  }
-  // Aramark (Vero)
-  return `
-    <div class="card cheque-card">
-      <div class="head"><span class="fuente">🏢 Aramark (Vero)</span><span class="fecha">${iso}</span></div>
-      ${renderSubcheque('Aramark', 'aramark_' + c.i, BASELINE_ARAMARK)}
-    </div>`;
+function every14(anchor,start,end){
+ const arr=[]; let d=new Date(anchor);
+ while(d<start)d=addDays(d,14);
+ while(d<=end){arr.push(new Date(d));d=addDays(d,14)}
+ return arr;
+}
+function payEvents(){
+ const events=[];
+ // Carey close Fri, payday +7
+ every14(new Date(2026,8,25),new Date(2026,8,25),new Date(2027,3,30)).forEach(close=>{
+   const pay=addDays(close,7), start=addDays(close,-13);
+   if(pay>=VIEW_START&&pay<=VIEW_END){
+     const calc=payrollNet(effectiveEntries(start,close,'carey','plan'),'carey');
+     events.push({id:'carey|'+iso(pay),who:'carey',label:'Carey',pay,close,start,projected:calc.net,detail:calc});
+   }
+ });
+ // Baylor end Sun, payday +5
+ every14(new Date(2026,8,20),new Date(2026,8,20),new Date(2027,3,30)).forEach(close=>{
+   const pay=addDays(close,5), start=addDays(close,-13);
+   if(pay>=VIEW_START&&pay<=VIEW_END){
+     const calc=payrollNet(effectiveEntries(start,close,'baylor','plan'),'baylor');
+     events.push({id:'baylor|'+iso(pay),who:'baylor',label:'Baylor',pay,close,start,projected:calc.net,detail:calc});
+   }
+ });
+ // Final Aramark manual conservative placeholder
+ events.push({id:'aramark|2026-10-01',who:'aramark',label:'Aramark final',pay:new Date(2026,9,1),close:null,start:null,projected:300,detail:null});
+ return events.sort((a,b)=>a.pay-b.pay);
+}
+function monthEvents(y,m){return payEvents().filter(e=>e.pay.getFullYear()===y&&e.pay.getMonth()===m)}
+
+function getMonthState(y,m){
+ const k=y+'-'+String(m+1).padStart(2,'0');
+ const defaults={budget:(y===2026&&m===9)?7140.39:6504.27,other:0,ma:0};
+ state.month[k]=Object.assign(defaults,state.month[k]||{});
+ return state.month[k];
+}
+function saveMonthInputs(){
+ const ms=getMonthState(cursor.getFullYear(),cursor.getMonth());
+ ms.budget=parseFloat(document.getElementById('budgetInput').value)||0;
+ ms.other=parseFloat(document.getElementById('otherIncome').value)||0;
+ ms.ma=parseFloat(document.getElementById('maIncome').value)||0;
+ state.initialCushion=parseFloat(document.getElementById('initialCushion').value)||0;
+ save();renderSummary();
 }
 
-function renderCheques() {
-  const { y, m } = mesIdxToYM(pagState.mesIdx);
-  const todos = todosChequesDelMes(y, m);
-  const { colchon, n } = colchonAcumuladoTotal();
-  const hcC = chqState.horasCareyCalc || { reg: 105, ot: 0, vac: 0 };
-
-  return `
-    <div class="colchon-banner ${colchon >= 0 ? 'pos' : 'neg'}">
-      <div class="tag">${colchon >= 0 ? 'Colchón acumulado (compartido)' : 'Colchón acumulado — en negativo'}</div>
-      <div class="amt">${fmt(colchon)}</div>
-      <div class="detail">Suma de (real − esperado base) en los ${n} cheques de Carey ($1,800), Aramark ($300 mínimo) y Baylor ($1,500) que ya tienen valor real cargado — un solo pozo, el dinero de Jhoan y Vero se usa en conjunto.</div>
-    </div>
-
-    <div class="card">
-      <h2>🧮 Calculadora Carey (Jhoan)</h2>
-      <div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">Quincenal: 105h = 10.5h × 5 días × 2 semanas. Solo te muestra el estimado — no se guarda.</div>
-      <div class="grid3">
-        <div><label>Horas regulares</label><input type="number" step="0.25" id="calc_carey_reg" value="${hcC.reg}" oninput="calcularEstimadoCarey()"></div>
-        <div><label>Horas overtime</label><input type="number" step="0.25" id="calc_carey_ot" value="${hcC.ot}" oninput="calcularEstimadoCarey()"></div>
-        <div><label>Horas vacación</label><input type="number" step="0.25" id="calc_carey_vac" value="${hcC.vac}" oninput="calcularEstimadoCarey()"></div>
-      </div>
-      <div class="estimado-box" style="margin-top:8px;">
-        <span>$23/h reg · $34.50/h OT · deducción 27.27%</span>
-        <span class="num" id="calc_carey_resultado">—</span>
-      </div>
-      <div style="font-size:10.5px;color:var(--text-muted);margin-top:8px;">Aramark y Baylor tienen su propia calculadora aparte, para Vero (calculadora-vero.html).</div>
-    </div>
-
-    <div class="card mesnav">
-      <button onclick="cambiarMesPagState(-1)" ${pagState.mesIdx === 0 ? 'disabled' : ''}>← Anterior</button>
-      <span class="lbl">${MESES_LARGO[m]} ${y}</span>
-      <button onclick="cambiarMesPagState(1)" ${pagState.mesIdx === N_MESES_DISPONIBLES - 1 ? 'disabled' : ''}>Siguiente →</button>
-    </div>
-    ${todos.map(renderChequeCard).join('') || '<div class="card"><div class="placeholder">Sin cheques este mes.</div></div>'}
-  `;
+function projectedIncomeForMonth(y,m){
+ const ms=getMonthState(y,m);
+ const p=monthEvents(y,m).reduce((s,e)=>s+e.projected,0);
+ return p+ms.other+ms.ma;
+}
+function cumulativeThrough(y,m){
+ let total=state.initialCushion||0;
+ let d=new Date(2026,9,1);
+ const end=new Date(y,m,1);
+ while(d<=end){
+   const ms=getMonthState(d.getFullYear(),d.getMonth());
+   total += projectedIncomeForMonth(d.getFullYear(),d.getMonth())-ms.budget;
+   d=new Date(d.getFullYear(),d.getMonth()+1,1);
+ }
+ return total;
 }
 
-function renderChequesTab() {
-  const el = document.getElementById('cheques-container');
-  if (el) { el.innerHTML = renderCheques(); calcularEstimadoCarey(); }
+function monthMilestone(y,m){
+ if(y===2026&&m===10) return '⚠️ Noviembre: Vero está de vacaciones del 10 al 20. Carey trabaja hasta el 20 y luego cierra por Thanksgiving; el impacto fuerte aparece en el cheque Carey del 11 de diciembre.';
+ if(y===2026&&m===11) return '🛡️ Diciembre es el mes crítico. Carey: cheque 11 dic afectado por Thanksgiving; cheque 25 dic por cierre desde el 18. Las 64 h de PTO se reservan para las semanas 21–25 y 28 dic–1 ene.';
+ if(y===2027&&m===0) return '⚠️ Enero: el cheque Carey del 8 ene es el residual del cierre de diciembre. Con 64 h PTO + Christmas + New Year, el modelo lo proyecta con 80 h pagadas a tarifa regular. Desde el cheque del 22 ene vuelve la normalidad.';
+ if(y===2027&&m===3) return '🎓 Abril: Vero termina Medical Assistant. El ingreso part-time futuro de +$500–$800/mes NO está incluido automáticamente; añádelo en “MA part-time / extra” cuando conozcas la fecha real de inicio.';
+ return '✅ Usa los checks diariamente. Si faltas, pulsa “No trabajó”; si haces un día extra, agrégalo. La proyección de los cheques se recalcula con el plan y podrás registrar el importe real cuando llegue.';
 }
 
-/* ================= PROYECCIÓN ================= */
-// Tío Emilio — préstamo especial fuera de la tabla de deudas (interés puro $170/mes, capital $5,300 pago único).
-const EMILIO = { capital: 5300, interesMensual: 170 };
-// Retiro 401k — ya decidido: $24,000, con un ratio de liquidación (payoff) confirmado para Regional Finance J.
-const RETIRO_MONTO = 24000;
-const RETIRO_PAYOFF_RATIO = 5390.64 / 7252.49; // liquidación con descuento ya confirmada
-const MES1_PROY = new Date(2026, 6, 1); // mes 1 = julio 2026 (mismo criterio que el resto del proyecto)
-
-function mesNumALabel(mesNum) {
-  const d = new Date(MES1_PROY);
-  d.setMonth(d.getMonth() + mesNum - 1);
-  const label = d.toLocaleDateString('es-MX', { month: 'long', year: 'numeric' });
-  return label.charAt(0).toUpperCase() + label.slice(1);
+function render(){
+ if(cursor<VIEW_START)cursor=new Date(VIEW_START);
+ if(cursor>new Date(2027,3,1))cursor=new Date(2027,3,1);
+ const y=cursor.getFullYear(),m=cursor.getMonth();
+ document.getElementById('monthTitle').textContent=MONTHS[m]+' '+y;
+ document.getElementById('milestone').textContent=monthMilestone(y,m);
+ renderCalendar(y,m); renderPayRows(y,m);
+ const ms=getMonthState(y,m);
+ document.getElementById('budgetInput').value=ms.budget.toFixed(2);
+ document.getElementById('otherIncome').value=ms.other.toFixed(2);
+ document.getElementById('maIncome').value=ms.ma.toFixed(2);
+ document.getElementById('initialCushion').value=(state.initialCushion||0).toFixed(2);
+ document.getElementById('initialCushion').disabled=!(y===2026&&m===9);
+ renderSummary();
+}
+function renderSummary(){
+ const y=cursor.getFullYear(),m=cursor.getMonth(),ms=getMonthState(y,m);
+ const inc=projectedIncomeForMonth(y,m), margin=inc-ms.budget, cum=cumulativeThrough(y,m);
+ document.getElementById('kProjected').textContent=money(inc);
+ document.getElementById('kBudget').textContent=money(ms.budget);
+ const km=document.getElementById('kMargin');km.textContent=money(margin);km.className='v '+(margin>=0?'pos':'neg');
+ const kc=document.getElementById('kCushion');kc.textContent=money(cum);kc.className='v '+(cum>=0?'pos':'neg');
+ const rb=document.getElementById('riskBox');
+ if(margin>=0){rb.className='risk ok';rb.textContent='Mes cubierto en la proyección: sobra '+money(margin)+'. Colchón acumulado estimado: '+money(cum)+'.';}
+ else{rb.className='risk bad';rb.textContent='Mes en déficit proyectado: faltan '+money(-margin)+'. El colchón acumulado estimado quedaría en '+money(cum)+'.';}
 }
 
-let proyState = loadData('du_proyeccion', null);
-if (!proyState) {
-  proyState = { extraPorMes: {}, extraDefault: 0, mesRetiro: 7, emilioAcumulado: 0, emilioPagado: false };
-  saveData('du_proyeccion', proyState);
-}
-function guardarProyState() { saveData('du_proyeccion', proyState); }
-
-function extraDelMes(mesNum) {
-  return proyState.extraPorMes[mesNum] !== undefined ? proyState.extraPorMes[mesNum] : proyState.extraDefault;
-}
-function updateExtraMes(mesNum, val) {
-  if (val === '') delete proyState.extraPorMes[mesNum];
-  else proyState.extraPorMes[mesNum] = parseFloat(val) || 0;
-  guardarProyState();
-  renderProyeccionTab();
-  renderCreditoTab();
-  renderResumenTab();
-}
-function updateExtraDefault(val) {
-  proyState.extraDefault = val === '' ? 0 : parseFloat(val) || 0;
-  guardarProyState();
-  renderProyeccionTab();
-  renderCreditoTab();
-  renderResumenTab();
-}
-function updateMesRetiro(val) {
-  proyState.mesRetiro = Math.max(1, parseInt(val) || 1);
-  guardarProyState();
-  renderProyeccionTab();
-  renderCreditoTab();
-  renderResumenTab();
-}
-
-function runSimulacionProyeccion() {
-  const active = debts.filter(d => d.balance > 0.005).map(d => ({ ...d }));
-  const balances = {}; active.forEach(d => balances[d.id] = d.balance);
-  const mins = {}; active.forEach(d => mins[d.id] = d.min);
-  const rates = {}; active.forEach(d => rates[d.id] = d.rate);
-
-  let emilioAhorro = 0, emilioPagado = false;
-  let totalInteres = 0, intEmilio = 0;
-  let month = 0;
-  const freedEvents = [];
-  const mesRetiro = proyState.mesRetiro;
-
-  while ((Object.values(balances).some(b => b > 0.005) || !emilioPagado) && month < 400) {
-    month++;
-
-    // 1. Interés mensual de cada deuda activa
-    Object.keys(balances).forEach(id => {
-      if (balances[id] > 0.005) {
-        const i = balances[id] * rates[id] / 12;
-        totalInteres += i;
-        balances[id] += i;
-      }
-    });
-
-    // 2. Interés de Tío Emilio (fijo, mientras no esté pagado)
-    if (!emilioPagado) intEmilio += EMILIO.interesMensual;
-
-    // 3. Retiro 401k en el mes configurado
-    if (month === mesRetiro) {
-      let retiro = RETIRO_MONTO;
-      const reg = active.find(d => d.name === 'Regional Finance J.');
-      if (reg && balances[reg.id] > 0.005) {
-        const payoff = balances[reg.id] * RETIRO_PAYOFF_RATIO;
-        retiro -= payoff;
-        balances[reg.id] = 0;
-        freedEvents.push({ month, id: reg.id, tipo: 'pagado-retiro' });
-      }
-      const tarjetasOrden = active.filter(d => d.tipo === 'tarjeta' && balances[d.id] > 0.005).sort((a, b) => b.min - a.min);
-      for (const d of tarjetasOrden) {
-        if (retiro <= 0) break;
-        if (balances[d.id] <= retiro) { retiro -= balances[d.id]; balances[d.id] = 0; freedEvents.push({ month, id: d.id, tipo: 'pagado-retiro' }); }
-        else { balances[d.id] -= retiro; retiro = 0; }
-      }
-      if (retiro > 0 && !emilioPagado) {
-        emilioAhorro += retiro;
-        if (emilioAhorro >= EMILIO.capital) emilioPagado = true;
-      }
-    }
-
-    // 4. Pagar mínimos
-    Object.keys(balances).forEach(id => {
-      if (balances[id] > 0.005) {
-        const pay = Math.min(mins[id], balances[id]);
-        balances[id] -= pay;
-        if (balances[id] < 0.005) balances[id] = 0;
-      }
-    });
-
-    // 5. Extra del mes (editable individualmente) + mínimos ya liberados de deudas pagadas
-    const liberados = active.filter(d => balances[d.id] <= 0.005).reduce((s, d) => s + mins[d.id], 0);
-    let extra = extraDelMes(month) + liberados;
-
-    // 6. Después del retiro, el flujo va primero a Tío Emilio
-    if (!emilioPagado && month >= mesRetiro) {
-      const flujoEmilio = Math.min(extra, EMILIO.capital - emilioAhorro);
-      emilioAhorro += flujoEmilio;
-      extra -= flujoEmilio;
-      if (emilioAhorro >= EMILIO.capital - 0.01) {
-        emilioPagado = true;
-        extra += (emilioAhorro - EMILIO.capital);
-        emilioAhorro = EMILIO.capital;
-        freedEvents.push({ month, id: 'emilio', tipo: 'emilio-pagado' });
-      }
-    }
-
-    // 7. Extra restante → snowball (saldo menor primero)
-    const activeSorted = active.filter(d => balances[d.id] > 0.005).sort((a, b) => balances[a.id] - balances[b.id]);
-    for (const d of activeSorted) {
-      if (extra <= 0.005) break;
-      const pay = Math.min(extra, balances[d.id]);
-      balances[d.id] -= pay; extra -= pay;
-      if (balances[d.id] < 0.005) balances[d.id] = 0;
-    }
-
-    // 8. Detectar liberaciones nuevas (snowball normal)
-    active.forEach(d => {
-      if (balances[d.id] <= 0.005 && !freedEvents.find(e => e.id === d.id)) {
-        freedEvents.push({ month, id: d.id, tipo: 'snowball' });
-      }
-    });
-
-    if (month > 1 && Object.values(balances).every(b => b <= 0.005) && emilioPagado) break;
-  }
-
-  return { totalMonths: month, totalInteres, intEmilio, freedEvents, emilioAhorro, emilioPagado };
+function renderCalendar(y,m){
+ const cal=document.getElementById('calendar');cal.innerHTML='';
+ const first=new Date(y,m,1), last=new Date(y,m+1,0);
+ let start=addDays(first,-weekdayMon0(first));
+ let end=addDays(last,6-weekdayMon0(last));
+ const pays=payEvents();
+ for(let w=new Date(start);w<=end;w=addDays(w,7)){
+   const row=document.createElement('div');row.className='week';
+   for(let i=0;i<7;i++){
+     const d=addDays(w,i),s=iso(d);
+     const day=document.createElement('div');
+     const todays=iso(new Date())===s;
+     const pe=pays.filter(p=>sameDay(p.pay,d));
+     day.className='day '+(d.getMonth()!==m?'out ':'')+(todays?'today ':'')+(pe.length?'payday ':'');
+     let body=`<div class="dhead"><span class="date">${d.getDate()}</span><span class="dow">${['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][d.getDay()]}</span></div>`;
+     const entries=plannedEntries(d);
+     let extraCounter=0;
+     entries.forEach((e,idx)=>{
+       const st=entryStatus(d,e,idx), id=entryId(d,e,idx);
+       const css=e.type==='work'?'work':e.type==='vac'?'vac':e.type==='closed'?'closed':e.type==='personal'?'personal':'hol';
+       const canCheck=e.type!=='closed';
+       body+=`<div class="event ${css}"><div class="row">${canCheck?`<input type="checkbox" ${st.done?'checked':''} onchange="toggleDone('${id}')">`:''}<span class="name">${e.label}</span></div>
+       <div class="meta">${e.hours?e.hours+' h':''}${st.missed?' · ❌ NO TRABAJADO':''}${e.extra?' · EXTRA':''}</div>
+       ${canCheck?`<div class="extraBtns"><button class="mini" onclick="toggleMissed('${id}')">${st.missed?'Restaurar':'No trabajó'}</button>${e.extra?`<button class="mini" onclick="removeExtra('${s}',${extraCounter})">Quitar extra</button>`:''}</div>`:''}</div>`;
+       if(e.extra)extraCounter++;
+     });
+     pe.forEach(p=>{
+       body+=`<div class="event pay"><div class="row"><span class="name">💰 Pago ${p.label}</span></div><div class="meta">Proy. ${money(p.projected)}${p.close?' · cierre '+p.close.getDate()+'/'+(p.close.getMonth()+1):''}</div></div>`;
+     });
+     if(d.getMonth()===m){
+       body+=`<div class="extraBtns"><button class="mini" onclick="addExtra('${s}','carey')">+ J extra</button><button class="mini" onclick="addExtra('${s}','baylor')">+ V extra</button></div>`;
+     }
+     day.innerHTML=body;row.appendChild(day);
+   }
+   cal.appendChild(row);
+ }
 }
 
-function renderProyeccion() {
-  const sim = runSimulacionProyeccion();
-  const mesRetiro = proyState.mesRetiro;
-  const fechaRetiro = mesNumALabel(mesRetiro);
-  const mesActual = 2; // agosto 2026 = mes 2 (mes 1 = julio 2026, ya pasado)
-  const mesesParaRetiro = mesRetiro - mesActual;
-
-  const retiroBanner = mesesParaRetiro > 0 ? `
-    <div class="retiro-banner">
-      <div class="tag">💰 Retiro 401k programado</div>
-      <div class="name">${fechaRetiro} — $24,000</div>
-      <div class="detail">
-        Faltan <b style="color:var(--blue)">${mesesParaRetiro} ${mesesParaRetiro===1?'mes':'meses'}</b> para el retiro.<br>
-        Se pagará: Regional Finance J. (liquidación con descuento) + tarjetas de mayor mínimo, en ese orden.
-      </div>
-    </div>` : `
-    <div class="retiro-banner">
-      <div class="tag">✅ Retiro 401k ya ejecutado — mes ${mesRetiro}</div>
-      <div class="name">$24,000 aplicados en ${fechaRetiro}</div>
-    </div>`;
-
-  const emilioBanner = !sim.emilioPagado ? `
-    <div class="emilio-banner">
-      <div class="tag">👴 Tío Emilio — $170/mes interés</div>
-      <div class="name">Capital: $5,300 — pago único</div>
-      <div class="detail">Proyectado a pagarse cuando el flujo liberado post-retiro alcance el capital completo.</div>
-    </div>` : `
-    <div class="emilio-banner" style="border-color:var(--accent);background:var(--accent-dim);">
-      <div class="tag" style="color:var(--accent);">✅ Tío Emilio — pagado en la proyección</div>
-      <div class="name">$5,300 completados</div>
-    </div>`;
-
-  const nameOf = id => id === 'emilio' ? 'Tío Emilio' : ((debts.find(d => d.id === id) || {}).name || '?');
-  const liberacionRows = sim.freedEvents
-    .sort((a, b) => a.month - b.month)
-    .map(ev => {
-      let tag = '<span class="tag-done">✅ libre</span>';
-      if (ev.tipo === 'pagado-retiro') tag = '<span class="tag-retiro">💰 con 401k</span>';
-      else if (ev.tipo === 'emilio-pagado') tag = '<span class="tag-emilio">👴 Emilio pagado</span>';
-      return `<div class="liberacion-row"><span class="m">Mes ${ev.month}</span><span class="n">${nameOf(ev.id)}</span>${tag}</div>`;
-    }).join('') || '<div class="placeholder">Sin deudas activas.</div>';
-
-  // Extra editable por mes: muestra los próximos 12 meses desde el mes actual
-  const filasExtra = [];
-  for (let mn = mesActual; mn < mesActual + 12; mn++) {
-    filasExtra.push(`
-      <div class="mes-extra-row">
-        <span class="lbl">Mes ${mn} — ${mesNumALabel(mn)}</span>
-        <input type="number" step="10" value="${extraDelMes(mn)}" onchange="updateExtraMes(${mn}, this.value)">
-      </div>`);
-  }
-
-  return `
-    <div class="card">
-      <div class="stat-grid">
-        <div class="stat-box"><div class="label">Meses hasta libertad</div><div class="value accent">${sim.totalMonths}</div></div>
-        <div class="stat-box"><div class="label">Interés total proyectado</div><div class="value">${fmt(sim.totalInteres + sim.intEmilio)}</div></div>
-      </div>
-    </div>
-    ${retiroBanner}
-    <div class="card">
-      <label>Mes del retiro 401k (mes 1 = jul 2026)</label>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <input type="number" min="1" max="60" value="${mesRetiro}" onchange="updateMesRetiro(this.value)" style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:9px 10px;font-family:'JetBrains Mono',monospace;">
-      </div>
-    </div>
-    ${emilioBanner}
-    <div class="card">
-      <h2>Extra mensual (editable mes a mes)</h2>
-      <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">Default para meses sin editar:</div>
-      <input type="number" step="10" value="${proyState.extraDefault}" onchange="updateExtraDefault(this.value)" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:9px 10px;font-family:'JetBrains Mono',monospace;margin-bottom:10px;">
-      ${filasExtra.join('')}
-    </div>
-    <div class="card">
-      <h2>Calendario de liberación proyectado</h2>
-      <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">💰 = pagada con el retiro del 401k · 👴 = Tío Emilio pagado · ✅ = liberada por snowball normal</div>
-      ${liberacionRows}
-    </div>
-  `;
+function renderPayRows(y,m){
+ const wrap=document.getElementById('payRows');wrap.innerHTML='';
+ const events=monthEvents(y,m);
+ events.forEach(e=>{
+   state.pay[e.id]=state.pay[e.id]||{received:false,actual:'',met:false};
+   const p=state.pay[e.id];
+   const detail=e.detail?`${e.detail.regH.toFixed(1)}h reg · ${e.detail.otH.toFixed(1)}h OT · ${e.detail.straightH.toFixed(1)}h PTO/holiday`:'último cheque estimado';
+   const div=document.createElement('div');div.className='payrow';
+   div.innerHTML=`<div><b>${e.pay.getDate()} ${MONTHS[e.pay.getMonth()].slice(0,3)} · ${e.label}</b><div class="meta">${detail}</div></div>
+     <div><div class="meta">Proyectado</div><div class="proj">${money(e.projected)}</div></div>
+     <div><div class="meta">Cheque real</div><input type="number" step="0.01" value="${p.actual}" placeholder="0.00" oninput="setPay('${e.id}','actual',this.value)"></div>
+     <div><label class="checkline"><input type="checkbox" ${p.received?'checked':''} onchange="setPay('${e.id}','received',this.checked)"> Recibido</label>
+     <label class="checkline"><input type="checkbox" ${p.met?'checked':''} onchange="setPay('${e.id}','met',this.checked)"> Cumplió proyección</label></div>`;
+   wrap.appendChild(div);
+ });
 }
+function setPay(id,key,val){state.pay[id]=state.pay[id]||{};state.pay[id][key]=val;save()}
 
-/* ================= CRÉDITO ================= */
-// Lee en vivo del mismo arreglo `debts` (única fuente de verdad) — se actualiza sola
-// cuando cambian saldos en Deudas o se marcan pagos en Pagos semana, sin lógica propia de saldo.
-// Cada persona ve: sus cuentas individuales + las conjuntas + las de las que es autorizado
-// (un autorizado sí suele aparecer en el reporte de crédito de esa persona también).
-let creditState = loadData('du_credit', null);
-if (!creditState) {
-  creditState = {
-    personaActiva: 'jhoan',
-    jhoan: { scoreBase: 573, historialNivel: 5, mixNivel: 3 },
-    vero: { scoreBase: 573, historialNivel: 5, mixNivel: 3 },
-  };
-  saveData('du_credit', creditState);
+function moveMonth(n){cursor=new Date(cursor.getFullYear(),cursor.getMonth()+n,1);render()}
+function exportData(){
+ const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='qv_schedule_backup.json';a.click();URL.revokeObjectURL(a.href);
 }
-function guardarCreditState() { saveData('du_credit', creditState); }
-
-function semaforoUtil(pct) {
-  if (pct <= 10) return { color: 'var(--accent)', label: '🟢 Ideal' };
-  if (pct <= 30) return { color: 'var(--amber)', label: '🟡 Aceptable' };
-  return { color: 'var(--red)', label: '🔴 Alto' };
+function importData(){
+ const inp=document.createElement('input');inp.type='file';inp.accept='.json';
+ inp.onchange=()=>{const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();render();alert('Respaldo importado.')}catch(e){alert('Archivo no válido.')}};r.readAsText(f)};inp.click();
 }
-function ratingUtil(pct) { if (pct <= 10) return 5; if (pct <= 30) return 4; if (pct <= 50) return 3; if (pct <= 75) return 2; return 1; }
-function ratingAntiguedad(anios) { if (anios >= 9) return 5; if (anios >= 5) return 4; if (anios >= 2) return 3; if (anios >= 1) return 2; return 1; }
-function calcularEstimadoScore(utilTotal, antigProm, historialNivel, mixNivel) {
-  const rUtil = ratingUtil(utilTotal);
-  const rAntig = antigProm != null ? ratingAntiguedad(antigProm) : 3;
-  const ponderado = historialNivel * 0.35 + rUtil * 0.30 + rAntig * 0.15 + mixNivel * 0.20;
-  return Math.round(300 + (ponderado - 1) / 4 * 550);
-}
+function resetAll(){if(confirm('¿Restablecer todos los checks, extras y cheques reales?')){localStorage.removeItem(STORE);location.reload()}}
 
-function debtsDePersona(persona) {
-  return debts.filter(d => d.titular === persona || d.autorizado === persona || d.titular === 'conjunta');
-}
-
-function switchCreditoPersona(persona) {
-  creditState.personaActiva = persona;
-  guardarCreditState();
-  renderCreditoTab();
-  renderResumenTab();
-}
-function updateCreditSetting(persona, field, val) {
-  creditState[persona][field] = (field === 'scoreBase') ? (parseFloat(val) || 0) : parseInt(val);
-  guardarCreditState();
-  renderCreditoTab();
-  renderResumenTab();
-}
-function updateCardLimiteCredito(id, val) {
-  const d = debts.find(x => x.id === id);
-  if (!d) return;
-  d.limite = val === '' ? null : parseFloat(val);
-  saveData('du_debts', debts);
-  renderCreditoTab();
-  renderDeudasTab();
-}
-function updateCardAntiguedadCredito(id, val) {
-  const d = debts.find(x => x.id === id);
-  if (!d) return;
-  d.antiguedad = val === '' ? null : parseFloat(val);
-  saveData('du_debts', debts);
-  renderCreditoTab();
-  renderDeudasTab();
-}
-
-function renderPanelPersona(persona, nombreLabel) {
-  const st = creditState[persona];
-  const misDebts = debtsDePersona(persona);
-  const tarjetas = misDebts.filter(d => d.tipo === 'tarjeta');
-  const conLimite = tarjetas.filter(d => d.limite != null && d.limite > 0);
-  const limiteTotal = conLimite.reduce((s, d) => s + d.limite, 0);
-  const saldoTotal = conLimite.reduce((s, d) => s + d.balance, 0);
-  const utilTotal = limiteTotal > 0 ? (saldoTotal / limiteTotal * 100) : 0;
-  const conAntiguedad = tarjetas.filter(d => d.antiguedad != null && d.antiguedad > 0);
-  const antigProm = conAntiguedad.length > 0 ? conAntiguedad.reduce((s, d) => s + d.antiguedad, 0) / conAntiguedad.length : null;
-  const sem = semaforoUtil(utilTotal);
-  const scoreEstimado = calcularEstimadoScore(utilTotal, antigProm, st.historialNivel, st.mixNivel);
-  const diff = scoreEstimado - st.scoreBase;
-
-  const filas = tarjetas.map(d => {
-    const util = (d.limite != null && d.limite > 0) ? (d.balance / d.limite * 100) : null;
-    const s = util != null ? semaforoUtil(util) : null;
-    const rolTxt = d.titular === 'conjunta' ? 'conjunta' : (d.titular === persona ? 'titular' : `autorizado (titular: ${d.titular === 'jhoan' ? 'Jhoan' : 'Vero'})`);
-    return `
-      <div class="card card-credito">
-        <div class="head">
-          <span class="name">${d.name} <span style="font-size:10px;color:var(--text-muted);font-weight:400;">(${rolTxt})</span></span>
-          ${util != null ? `<span class="util" style="color:${s.color}">${util.toFixed(1)}%</span>` : `<span class="sinlimite">sin límite</span>`}
-        </div>
-        <div class="grid3b">
-          <div><div class="k">Saldo</div><div class="v">${fmt(d.balance)}</div></div>
-          <div><div class="k">Límite</div><input type="number" value="${d.limite!=null?d.limite:''}" placeholder="—" onchange="updateCardLimiteCredito('${d.id}',this.value)" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:13px;padding:5px 7px;font-family:'JetBrains Mono',monospace;"></div>
-          <div><div class="k">Antigüedad (años)</div><input type="number" step="0.1" value="${d.antiguedad!=null?d.antiguedad:''}" placeholder="—" onchange="updateCardAntiguedadCredito('${d.id}',this.value)" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:13px;padding:5px 7px;font-family:'JetBrains Mono',monospace;"></div>
-        </div>
-      </div>`;
-  }).join('') || '<div class="card"><div class="placeholder">Sin tarjetas registradas.</div></div>';
-
-  return `
-    <div class="util-banner" style="border-color:${sem.color};">
-      <div class="tag" style="color:${sem.color}">${sem.label} — Utilización de ${nombreLabel}</div>
-      <div class="name" style="color:${sem.color}">${limiteTotal>0?utilTotal.toFixed(1)+'%':'—'}</div>
-      <div class="detail">${fmt(saldoTotal)} de ${fmt(limiteTotal)} en límite combinado${antigProm!=null?` · antigüedad promedio: ${antigProm.toFixed(1)} años`:''}</div>
-    </div>
-    <div class="card">
-      <div class="stat-grid">
-        <div class="stat-box"><div class="label">Saldo en tarjetas</div><div class="value">${fmt(saldoTotal)}</div></div>
-        <div class="stat-box"><div class="label">Límite total</div><div class="value">${limiteTotal>0?fmt(limiteTotal):'—'}</div></div>
-      </div>
-    </div>
-    <div class="card">
-      <h2 style="margin-bottom:4px;">🎯 Estimador de puntaje — ${nombreLabel} (ilustrativo)</h2>
-      <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px;line-height:1.5;">
-        No es tu puntaje real — las agencias usan modelos propietarios. Aproximación educativa con los pesos conocidos de FICO (historial 35%, utilización 30%, antigüedad 15%, mezcla/nuevo crédito 20%).
-      </div>
-      <div class="score-box">
-        <div class="num" style="color:${scoreEstimado>=670?'var(--accent)':scoreEstimado>=580?'var(--amber)':'var(--red)'}">${scoreEstimado}</div>
-        <div class="sub">estimado, rango 300–850</div>
-        <div class="comp">Puntaje real conocido: <b style="color:var(--text)">${st.scoreBase}</b> · diferencia: <b style="color:${diff>=0?'var(--accent)':'var(--red)'}">${diff>=0?'+':''}${diff}</b></div>
-      </div>
-      <div style="margin-bottom:10px;">
-        <label style="font-size:11px;color:var(--text-muted);text-transform:uppercase;display:block;margin-bottom:5px;">Puntaje real conocido de ${nombreLabel} (Credit Karma, etc.)</label>
-        <input type="number" value="${st.scoreBase}" onchange="updateCreditSetting('${persona}','scoreBase',this.value)" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:14px;padding:8px 10px;font-family:'JetBrains Mono',monospace;">
-      </div>
-      <div style="margin-bottom:10px;">
-        <label style="font-size:11px;color:var(--text-muted);text-transform:uppercase;display:block;margin-bottom:5px;">Historial de pago</label>
-        <select onchange="updateCreditSetting('${persona}','historialNivel',this.value)" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:13px;padding:8px 10px;">
-          <option value="5" ${st.historialNivel==5?'selected':''}>Perfecto, nunca un atraso</option>
-          <option value="4" ${st.historialNivel==4?'selected':''}>Casi perfecto, 1 atraso viejo</option>
-          <option value="3" ${st.historialNivel==3?'selected':''}>Algunos atrasos ocasionales</option>
-          <option value="2" ${st.historialNivel==2?'selected':''}>Atrasos frecuentes</option>
-          <option value="1" ${st.historialNivel==1?'selected':''}>Cuentas en cobranza/default</option>
-        </select>
-      </div>
-      <div>
-        <label style="font-size:11px;color:var(--text-muted);text-transform:uppercase;display:block;margin-bottom:5px;">Mezcla de crédito / cuentas nuevas</label>
-        <select onchange="updateCreditSetting('${persona}','mixNivel',this.value)" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:13px;padding:8px 10px;">
-          <option value="5" ${st.mixNivel==5?'selected':''}>Variada (tarjetas+préstamos+carro), sin cuentas nuevas</option>
-          <option value="4" ${st.mixNivel==4?'selected':''}>Variada, 1 cuenta nueva reciente</option>
-          <option value="3" ${st.mixNivel==3?'selected':''}>Promedio (tarjetas+préstamos+carros)</option>
-          <option value="2" ${st.mixNivel==2?'selected':''}>Varias cuentas nuevas en el último año</option>
-          <option value="1" ${st.mixNivel==1?'selected':''}>Casi todo tarjetas, muchas cuentas nuevas</option>
-        </select>
-      </div>
-    </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin:16px 4px 10px;">
-      <h2 style="font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin:0;">Tarjetas de ${nombreLabel}</h2>
-    </div>
-    ${filas}
-    <div class="card">
-      <div style="font-size:11px;color:var(--text-muted);line-height:1.5;">
-        FICO valora más el total bajo 10% de utilización combinada, no solo tarjeta por tarjeta. Las tarjetas donde ${nombreLabel} es autorizado también cuentan aquí porque suelen aparecer en su reporte de crédito. La antigüedad promedio también pesa — si una tarjeta llega a $0, déjala en Deudas (no la borres) para que siga contando.
-      </div>
-    </div>
-  `;
-}
-
-function renderCredito() {
-  const persona = creditState.personaActiva || 'jhoan';
-  return `
-    <div class="card mesnav" style="margin-bottom:14px;justify-content:center;gap:10px;">
-      <button onclick="switchCreditoPersona('jhoan')" style="${persona==='jhoan'?'background:var(--accent-dim);color:var(--accent);border-color:var(--accent);':''}">👤 Jhoan</button>
-      <button onclick="switchCreditoPersona('vero')" style="${persona==='vero'?'background:var(--accent-dim);color:var(--accent);border-color:var(--accent);':''}">👤 Vero</button>
-    </div>
-    ${renderPanelPersona(persona, persona === 'jhoan' ? 'Jhoan' : 'Vero')}
-  `;
-}
-
-/* ================= HISTORIAL ================= */
-// Cerrar un mes toma una "foto" de: lo programado vs. lo realmente marcado en Pagos semana,
-// esperado vs. real de cada cheque del mes, y el saldo total de deuda en ese momento —
-// para poder comparar cumplimiento real vs. proyectado más adelante.
-let historialState = loadData('du_historial', []);
-function guardarHistorial() { saveData('du_historial', historialState); }
-
-function snapshotMes(y, m) {
-  const mk = ymKey(y, m);
-  const fijos = fijosDelMes(y, m);
-  const activos = fijos.filter(f => !f.pausado);
-  const totalProgramado = activos.reduce((s, f) => s + f.monto, 0);
-  const totalPagado = activos.filter(f => pagState.pagosMarcados[mk + '|' + f.key]).reduce((s, f) => s + f.monto, 0);
-
-  const chequesMes = todosChequesDelMes(y, m);
-  const chequesResumen = chequesMes.map(c => {
-    const iso = fechaISO(c.date);
-    if (c.tipo === 'careybaylor') {
-      if (c.fuente === 'Carey + Aramark') {
-        return { fuente: 'Carey', fecha: iso, esperado: esperadoCarey(iso), real: chqState.real[c.i + '_carey'] ?? null };
-      }
-      return { fuente: 'Baylor', fecha: iso, esperado: c.monto, real: chqState.real[c.i + '_baylor'] ?? null };
-    }
-    return { fuente: 'Aramark', fecha: iso, esperado: BASELINE_ARAMARK, real: chqState.real['aramark_' + c.i] ?? null };
-  });
-
-  return {
-    mk, mesLabel: MESES_LARGO[m] + ' ' + y,
-    fechaCierre: new Date().toISOString().slice(0, 10),
-    totalProgramado, totalPagado,
-    pctCumplimiento: totalProgramado > 0 ? (totalPagado / totalProgramado * 100) : 0,
-    chequesResumen,
-    deudaTotalCierre: totalDeuda(),
-  };
-}
-
-function cerrarMes(idx) {
-  const { y, m } = mesIdxToYM(idx);
-  const mk = ymKey(y, m);
-  const yaExiste = historialState.find(h => h.mk === mk);
-  if (yaExiste && !confirm(`${MESES_LARGO[m]} ${y} ya está cerrado en el historial. ¿Reemplazar con los datos actuales?`)) return;
-  const snap = snapshotMes(y, m);
-  historialState = historialState.filter(h => h.mk !== mk);
-  historialState.push(snap);
-  historialState.sort((a, b) => a.mk.localeCompare(b.mk));
-  guardarHistorial();
-  renderHistorialTab();
-}
-
-function eliminarCierre(mk) {
-  if (!confirm('¿Eliminar este mes del historial? No afecta los datos de Pagos semana ni Cheques.')) return;
-  historialState = historialState.filter(h => h.mk !== mk);
-  guardarHistorial();
-  renderHistorialTab();
-}
-
-function copiarResumenMes(mk) {
-  const h = historialState.find(x => x.mk === mk);
-  if (!h) return;
-  const chequesTxt = h.chequesResumen.map(c => `  ${c.fecha} ${c.fuente}: esperado ${fmt(c.esperado)} · real ${c.real !== null ? fmt(c.real) : '—'}`).join('\n');
-  const texto = `${h.mesLabel} — cerrado ${h.fechaCierre}
-Fijos: ${fmt(h.totalPagado)} pagado de ${fmt(h.totalProgramado)} programado (${h.pctCumplimiento.toFixed(0)}%)
-Deuda total al cierre: ${fmt(h.deudaTotalCierre)}
-Cheques:
-${chequesTxt}`;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(texto).then(() => alert('Resumen copiado — pégalo donde quieras guardarlo.'));
-  } else {
-    alert(texto);
-  }
-}
-
-function renderHistorial() {
-  const opciones = [];
-  for (let i = 0; i < N_MESES_DISPONIBLES; i++) {
-    const { y, m } = mesIdxToYM(i);
-    opciones.push(`<option value="${i}">${MESES_LARGO[m]} ${y}</option>`);
-  }
-
-  const ordenado = [...historialState].sort((a, b) => b.mk.localeCompare(a.mk));
-  const lista = ordenado.map(h => {
-    const cumpliColor = h.pctCumplimiento >= 90 ? 'var(--accent)' : h.pctCumplimiento >= 60 ? 'var(--amber)' : 'var(--red)';
-    const idxPrev = ordenado.indexOf(h) + 1;
-    const prev = ordenado[idxPrev];
-    const deudaDelta = prev ? h.deudaTotalCierre - prev.deudaTotalCierre : null;
-    return `
-      <div class="hist-month">
-        <div class="head">
-          <span class="lbl">${h.mesLabel}</span>
-          <span class="fecha">cerrado ${h.fechaCierre}</span>
-        </div>
-        <div class="metrics">
-          <span>Fijos: <b style="color:${cumpliColor}">${h.pctCumplimiento.toFixed(0)}%</b></span>
-          <span>${fmt(h.totalPagado)} / ${fmt(h.totalProgramado)}</span>
-        </div>
-        <div class="metrics">
-          <span>Deuda al cierre: <b>${fmt(h.deudaTotalCierre)}</b></span>
-          ${deudaDelta !== null ? `<span style="color:${deudaDelta<=0?'var(--accent)':'var(--red)'}">${deudaDelta<=0?'▼':'▲'} ${fmt(Math.abs(deudaDelta))} vs mes anterior</span>` : ''}
-        </div>
-        <div style="margin-top:6px;">
-          ${h.chequesResumen.map(c => `
-            <div class="hist-cheque-row">
-              <span>${c.fecha} ${c.fuente}</span>
-              <span>${fmt(c.esperado)} esp. · ${c.real!==null?fmt(c.real):'—'} real</span>
-            </div>`).join('')}
-        </div>
-        <div class="hist-actions">
-          <button class="btn secondary" style="padding:8px;font-size:12px;" onclick="copiarResumenMes('${h.mk}')">📋 Copiar resumen</button>
-          <button class="btn danger" style="padding:8px;font-size:12px;" onclick="eliminarCierre('${h.mk}')">🗑️ Eliminar</button>
-        </div>
-      </div>`;
-  }).join('') || '<div class="card"><div class="placeholder">Sin meses cerrados todavía.</div></div>';
-
-  return `
-    <div class="card">
-      <h2>Cerrar un mes</h2>
-      <div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">Guarda una foto de lo programado vs. lo pagado, los cheques esperado vs. real, y el saldo de deuda de ese momento — para comparar después.</div>
-      <select id="hist-mes-select" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:9px 10px;font-family:'JetBrains Mono',monospace;margin-bottom:10px;">
-        ${opciones.join('')}
-      </select>
-      <button class="btn full" onclick="cerrarMes(parseInt(document.getElementById('hist-mes-select').value))">Cerrar este mes</button>
-    </div>
-    <div style="margin:16px 4px 10px;">
-      <h2 style="font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin:0;">Meses cerrados (${historialState.length})</h2>
-    </div>
-    ${lista}
-  `;
-}
-
-function renderHistorialTab() {
-  const el = document.getElementById('historial-container');
-  if (el) el.innerHTML = renderHistorial();
-}
-
-function renderProyeccionTab() {
-  const el = document.getElementById('proyeccion-container');
-  if (el) el.innerHTML = renderProyeccion();
-}
-
-/* ================= RESUMEN ================= */
-// Solo agrega datos ya calculados en otras pestañas — no repite fijos del mes ni listado de pagos.
-function mesActualNum() {
-  const hoy = new Date();
-  return (hoy.getFullYear() - MES1_PROY.getFullYear()) * 12 + (hoy.getMonth() - MES1_PROY.getMonth()) + 1;
-}
-
-function renderResumen() {
-  const sim = runSimulacionProyeccion();
-  const mn = mesActualNum();
-  const mesActualLabel = mesNumALabel(mn);
-  const activas = [...debts].filter(d => d.balance > 0.005).sort((a, b) => b.balance - a.balance);
-
-  const filas = activas.map(d => `
-    <div class="debt-row">
-      <div class="debt-badge ${d.tipo}"></div>
-      <div class="info">
-        <div class="name">${d.name}</div>
-        <div class="meta">${tipoLabel(d.tipo)} · ${(d.rate*100).toFixed(2)}% APR</div>
-      </div>
-      <div class="amt">${fmt(d.balance)}</div>
-    </div>`).join('') || '<div class="placeholder">🎉 ¡Todas las deudas liquidadas!</div>';
-
-  return `
-    <div class="card">
-      <h2>Este mes</h2>
-      <div class="stat-grid">
-        <div class="stat-box"><div class="label">Mes actual</div><div class="value accent" style="font-size:14px;">${mesActualLabel}</div></div>
-        <div class="stat-box"><div class="label">Meses hasta libertad</div><div class="value">${sim.totalMonths}</div></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="stat-grid">
-        <div class="stat-box"><div class="label">Deuda total</div><div class="value">${fmt(totalDeuda())}</div></div>
-        <div class="stat-box"><div class="label">Tasa promedio ponderada</div><div class="value">${(tasaPromedioPonderada()*100).toFixed(2)}%</div></div>
-        <div class="stat-box"><div class="label">Interés total proyectado</div><div class="value">${fmt(sim.totalInteres + sim.intEmilio)}</div></div>
-        <div class="stat-box"><div class="label">Mínimos combinados</div><div class="value">${fmt(totalMinimos())}/mes</div></div>
-      </div>
-    </div>
-    <div class="card">
-      <h2>Deudas activas (${activas.length})</h2>
-      ${filas}
-    </div>
-  `;
-}
-
-function renderResumenTab() {
-  const el = document.getElementById('resumen-container');
-  if (el) el.innerHTML = renderResumen();
-}
-
-function renderCreditoTab() {
-  const el = document.getElementById('credito-container');
-  if (el) el.innerHTML = renderCredito();
-}
-
-/* ---------------- Init ---------------- */
-(function init() {
-  renderDeudasTab();
-  renderPagosSemanaTab();
-  renderChequesTab();
-  renderProyeccionTab();
-  renderCreditoTab();
-  renderHistorialTab();
-  renderResumenTab();
-  const lastTab = loadData('du_lasttab', 'resumen');
-  if (lastTab && document.getElementById('tab-' + lastTab)) switchTab(lastTab);
-})();
+render();
 </script>
-
 </body>
 </html>
